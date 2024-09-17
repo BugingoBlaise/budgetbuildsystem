@@ -19,10 +19,10 @@ import java.util.Set;
 @Component
 public class InitialRunnerApp implements CommandLineRunner {
     @Autowired
-      IUserService userService;
+    IUserService userService;
     @Autowired
-      IAdminService adminService;
-        PasswordEncoder passwordEncoder;
+    IAdminService adminService;
+    PasswordEncoder passwordEncoder;
 
     @Autowired
     public InitialRunnerApp(PasswordEncoder passwordEncoder) {
@@ -43,15 +43,16 @@ public class InitialRunnerApp implements CommandLineRunner {
             user.setRoles(Set.of(String.valueOf(ERole.ADMIN)));
             RHA_Administrator administrator = new RHA_Administrator();
             administrator.setUser(user);
-             user.setAdministrator(administrator);
+            user.setAdministrator(administrator);
 
             userService.saveUser(user);
+
             adminService.saveAdmin(administrator);
 
             log.info("Initial admin user created.");
             log.info("Email: " + user.getUsername());
-       log.info("Password: adminPassword");
-        }else{
+            log.info("Password: adminPassword");
+        } else {
             log.info("Admin user already exists. Skipping creation.");
         }
 

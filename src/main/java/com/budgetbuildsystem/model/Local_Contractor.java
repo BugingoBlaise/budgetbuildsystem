@@ -18,7 +18,7 @@ public class Local_Contractor {
     private String companyName;
     private String email;
     private String phoneNumber;
-    public String username;
+    public  String username;
     private String password;
     private String contactDetails;
     private String licenseNumber;

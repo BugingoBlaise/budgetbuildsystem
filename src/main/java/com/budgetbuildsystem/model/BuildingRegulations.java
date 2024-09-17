@@ -16,7 +16,6 @@ public class BuildingRegulations {
     private UUID id;
     private String regulationTitle;
     private String regulationDetails;
-    @Lob
-    private byte[] regulationImage;
+    private String regulationImagePath;
 
 }

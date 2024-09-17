@@ -21,7 +21,7 @@ public class SupplierServiceImpl implements ISupplierService {
     public void saveSupplier(Supplier supplier) {
         if (supplier != null) {
             supplier.setSupplierName(supplier.getSupplierName());
-            supplier.setContactDetails(supplier.getContactDetails());
+//            supplier.set(supplier.getContactDetails());
             supplierRepository.save(supplier);
         }
     }

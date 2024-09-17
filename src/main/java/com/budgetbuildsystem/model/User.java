@@ -28,9 +28,7 @@ public class User  {
     private RHA_Administrator administrator;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-
     private Local_Contractor contractor;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Supplier supplier;
-
 }

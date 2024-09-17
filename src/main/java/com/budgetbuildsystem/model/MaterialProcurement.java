@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
+
 @RequiredArgsConstructor
 @Data
 @Entity
@@ -26,6 +27,4 @@ public class MaterialProcurement {
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 
-    // Getters and Setters
-    // Constructor
 }

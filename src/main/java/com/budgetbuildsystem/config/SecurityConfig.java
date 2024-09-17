@@ -18,7 +18,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
     @Autowired
     MyUserDetailService userDetailService;
 
@@ -27,8 +26,11 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/api/auth/signup/**","/api/contractors/**","/api/v1/contractors/all").permitAll() // Permit access to sign-up endpoints
-                                .requestMatchers("/api/auth/login/**","/api/regulations/**").permitAll()
+                                .requestMatchers(
+                                        "/api/auth/signup/**",
+                                        "/api/contractors/**").permitAll() // Permit access to sign-up endpoints
+                                .requestMatchers("/api/auth/login/**").permitAll()
+                                .requestMatchers("/api/regulations/**").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
 //                        .requestMatchers("/home","/register/**").permitAll()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
@@ -55,10 +57,12 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         return userDetailService;
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();

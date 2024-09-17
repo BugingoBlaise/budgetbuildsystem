@@ -23,11 +23,11 @@ public class CitizenServiceImpl implements ICitizenService {
             newCitizen.setFirstName(citizen.getFirstName());
             newCitizen.setLastName(citizen.getLastName());
             newCitizen.setEmail(citizen.getEmail());
-            newCitizen.setUsername(citizen.getUsername());
+//            newCitizen.setUsername(citizen.getUsername());
             newCitizen.setPassword(citizen.getPassword());
             newCitizen.setAddress(citizen.getAddress());
             newCitizen.setPhoneNumber(citizen.getPhoneNumber());
-            newCitizen.setGender(citizen.getGender());
+//            newCitizen.setGender(citizen.getGender());
             return citizenRepository.save(citizen);
         }catch (Exception e) {
             throw new RuntimeException();
