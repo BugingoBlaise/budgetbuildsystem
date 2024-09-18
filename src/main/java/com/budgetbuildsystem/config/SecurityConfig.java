@@ -32,6 +32,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/auth/login/**").permitAll()
                                 .requestMatchers("/api/regulations/**").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/api/loans/**").permitAll()
 //                        .requestMatchers("/home","/register/**").permitAll()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/user/**").hasRole("USER")

@@ -11,7 +11,7 @@ public interface IUserService  {
    Optional<User>findByUser(String username);
 
    Citizen saveCitizen(Citizen citizen);
-    Page<RHA_Administrator> getAllAdminUsers(Pageable pageable);
+    Page<Administrator> getAllAdminUsers(Pageable pageable);
 
 
   /* User saveContractor(Local_Contractor contractor);

@@ -1,6 +1,6 @@
 package com.budgetbuildsystem.config;
 
-import com.budgetbuildsystem.model.RHA_Administrator;
+import com.budgetbuildsystem.model.Administrator;
 import com.budgetbuildsystem.model.User;
 import com.budgetbuildsystem.model.enums.ERole;
 import com.budgetbuildsystem.service.admin.IAdminService;
@@ -31,7 +31,7 @@ public class InitialRunnerApp implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Page<RHA_Administrator> adminPage = userService.getAllAdminUsers(PageRequest.of(0, 1));
+        Page<Administrator> adminPage = userService.getAllAdminUsers(PageRequest.of(0, 1));
 
         if (adminPage.getTotalElements() == 0) {
             System.out.println("-------Initial setup running----------------");
@@ -41,7 +41,7 @@ public class InitialRunnerApp implements CommandLineRunner {
             user.setPassword(passwordEncoder.encode(passwordEncoder.encode("open123")));
 
             user.setRoles(Set.of(String.valueOf(ERole.ADMIN)));
-            RHA_Administrator administrator = new RHA_Administrator();
+            Administrator administrator = new Administrator();
             administrator.setUser(user);
             user.setAdministrator(administrator);
 

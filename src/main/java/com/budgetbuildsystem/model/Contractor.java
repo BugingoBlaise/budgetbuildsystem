@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "contractors")
-public class Local_Contractor {
+public class Contractor {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -27,10 +27,9 @@ public class Local_Contractor {
     @Lob
     private byte[] profilePic;
     @OneToMany(mappedBy = "contractor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ContractorRecommendation> reviews;
+    private List<Recommendation> reviews;
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne
-    private RHA_Administrator administrators;
+
 }

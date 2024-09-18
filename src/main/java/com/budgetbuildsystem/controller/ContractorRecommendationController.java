@@ -1,10 +1,10 @@
 package com.budgetbuildsystem.controller;
 
 import com.budgetbuildsystem.exception.EmailNotFound;
-import com.budgetbuildsystem.model.ContractorRecommendation;
-import com.budgetbuildsystem.model.Local_Contractor;
+import com.budgetbuildsystem.model.Recommendation;
+import com.budgetbuildsystem.model.Contractor;
 import com.budgetbuildsystem.service.contractor.IContractorService;
-import com.budgetbuildsystem.service.recommendationsAndReviews.IRecommendationService;
+import com.budgetbuildsystem.service.recommendations.IRecommendationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,25 +55,25 @@ public class ContractorRecommendationController {
     }*/
 
     @GetMapping
-    public ResponseEntity<List<Local_Contractor>> listAllContractors() {
-        List<Local_Contractor> contractors = contractorService.findAllContractors();
+    public ResponseEntity<List<Contractor>> listAllContractors() {
+        List<Contractor> contractors = contractorService.findAllContractors();
         return ResponseEntity.ok(contractors);
     }
 
     @GetMapping("/{contractorId}")
-    public ResponseEntity<Optional<Local_Contractor>> getContractorById(@PathVariable UUID contractorId) {
-        Optional<Local_Contractor> contractor = recommendationService.getContractorById(contractorId);
+    public ResponseEntity<Optional<Contractor>> getContractorById(@PathVariable UUID contractorId) {
+        Optional<Contractor> contractor = recommendationService.getContractorById(contractorId);
         return ResponseEntity.ok(contractor);
     }
 
     @PostMapping("/{contractorId}/review")
-    public ResponseEntity<ContractorRecommendation> rateAndComment(
+    public ResponseEntity<Recommendation> rateAndComment(
             @PathVariable UUID contractorId,
             @RequestParam int rating,
             @RequestParam String comment,
             @RequestParam UUID citizenId) throws EmailNotFound {
         try {
-            ContractorRecommendation review = recommendationService.rateAndComment(contractorId, rating, comment, citizenId);
+            Recommendation review = recommendationService.rateAndComment(contractorId, rating, comment, citizenId);
             return ResponseEntity.status(HttpStatus.CREATED).body(review);
         } catch (Exception ex) {
             throw new EmailNotFound("Email not found");
@@ -81,9 +81,9 @@ public class ContractorRecommendationController {
     }
 
     @GetMapping("/{contractorId}/reviews")
-    public ResponseEntity<List<ContractorRecommendation>> getReviewsForContractor(@PathVariable UUID contractorId) {
+    public ResponseEntity<List<Recommendation>> getReviewsForContractor(@PathVariable UUID contractorId) {
         try {
-            List<ContractorRecommendation> reviews = recommendationService.getReviewsForContractor(contractorId);
+            List<Recommendation> reviews = recommendationService.getReviewsForContractor(contractorId);
             return ResponseEntity.ok(reviews);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

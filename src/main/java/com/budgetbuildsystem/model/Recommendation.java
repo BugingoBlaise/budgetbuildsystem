@@ -13,7 +13,7 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "reviews_recommendation")
-public class ContractorRecommendation {
+public class Recommendation {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -28,5 +28,5 @@ public class ContractorRecommendation {
     private Citizen citizen;
     @ManyToOne
     @JoinColumn(name = "contractor_id")
-    private Local_Contractor contractor;
+    private Contractor contractor;
 }

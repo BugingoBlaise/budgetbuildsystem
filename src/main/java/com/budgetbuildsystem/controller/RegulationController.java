@@ -1,6 +1,6 @@
 package com.budgetbuildsystem.controller;
 
-import com.budgetbuildsystem.model.BuildingRegulations;
+import com.budgetbuildsystem.model.Regulations;
 import com.budgetbuildsystem.service.fileService.FileService;
 import com.budgetbuildsystem.service.regulations.IRegulationsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +26,13 @@ public class RegulationController {
 
 
     @GetMapping
-    public List<BuildingRegulations> getAllRegulations() {
+    public List<Regulations> getAllRegulations() {
         return buildingRegulationsService.getAllRegulations();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BuildingRegulations> getRegulationById(@PathVariable UUID id) {
-        Optional<BuildingRegulations> regulation = buildingRegulationsService.getRegulationById(id);
+    public ResponseEntity<Regulations> getRegulationById(@PathVariable UUID id) {
+        Optional<Regulations> regulation = buildingRegulationsService.getRegulationById(id);
         return regulation.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -42,7 +42,7 @@ public class RegulationController {
             @RequestParam("regulationDetails") String regulationDetails,
             @RequestParam(value = "regulationImage", required = true) MultipartFile regulationImage) {
         try {
-            BuildingRegulations newRegulation = new BuildingRegulations();
+            Regulations newRegulation = new Regulations();
             newRegulation.setRegulationTitle(regulationTitle);
             newRegulation.setRegulationDetails(regulationDetails);
 
@@ -51,7 +51,7 @@ public class RegulationController {
                 newRegulation.setRegulationImagePath(fileName);
             }
 
-            BuildingRegulations savedRegulation = buildingRegulationsService.saveRegulation(newRegulation);
+            Regulations savedRegulation = buildingRegulationsService.saveRegulation(newRegulation);
             return ResponseEntity.ok(savedRegulation);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not upload file: " + e.getMessage());
@@ -65,10 +65,10 @@ public class RegulationController {
             @RequestParam("regulationDetails") String regulationDetails,
             @RequestParam(value = "regulationImage", required = false) MultipartFile regulationImage) {
         try {
-            Optional<BuildingRegulations> existingRegulation = buildingRegulationsService.getRegulationById(id);
+            Optional<Regulations> existingRegulation = buildingRegulationsService.getRegulationById(id);
 
             if (existingRegulation.isPresent()) {
-                BuildingRegulations regulationToUpdate = existingRegulation.get();
+                Regulations regulationToUpdate = existingRegulation.get();
                 regulationToUpdate.setRegulationTitle(regulationTitle);
                 regulationToUpdate.setRegulationDetails(regulationDetails);
 
@@ -82,7 +82,7 @@ public class RegulationController {
                     String fileName = fileService.storeFile(regulationImage);
                     regulationToUpdate.setRegulationImagePath(fileName);
                 }
-                BuildingRegulations updatedRegulation = buildingRegulationsService.saveRegulation(regulationToUpdate);
+                Regulations updatedRegulation = buildingRegulationsService.saveRegulation(regulationToUpdate);
                 return ResponseEntity.ok(updatedRegulation);
             } else {
                 return ResponseEntity.notFound().build();
@@ -95,7 +95,7 @@ public class RegulationController {
     @DeleteMapping("/deleteReg/{id}")
     public ResponseEntity<?> deleteRegulation(@PathVariable UUID id) {
         try {
-            Optional<BuildingRegulations> regulation = buildingRegulationsService.getRegulationById(id);
+            Optional<Regulations> regulation = buildingRegulationsService.getRegulationById(id);
             if (regulation.isPresent()) {
                 // Delete the associated file if it exists
                 if (regulation.get().getRegulationImagePath() != null) {

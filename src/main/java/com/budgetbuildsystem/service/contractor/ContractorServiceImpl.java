@@ -1,6 +1,6 @@
 package com.budgetbuildsystem.service.contractor;
 
-import com.budgetbuildsystem.model.Local_Contractor;
+import com.budgetbuildsystem.model.Contractor;
 import com.budgetbuildsystem.repository.IContractorRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +19,9 @@ public class ContractorServiceImpl implements IContractorService {
     IContractorRepository repo;
 
     @Override
-    public void saveContractor(Local_Contractor contractor) {
+    public void saveContractor(Contractor contractor) {
         try {
-            Local_Contractor contractor1 = new Local_Contractor();
+            Contractor contractor1 = new Contractor();
             contractor1.setCompanyName(contractor.getCompanyName());
             contractor1.setLicenseNumber(contractor.getLicenseNumber());
             contractor1.setContactDetails(contractor.getContactDetails());
@@ -32,12 +32,12 @@ public class ContractorServiceImpl implements IContractorService {
     }
 
     @Override
-    public Optional<Local_Contractor> findByName(String contractorName) {
+    public Optional<Contractor> findByName(String contractorName) {
         return Optional.ofNullable(repo.findByCompanyName(contractorName).orElseThrow(() -> new EntityNotFoundException("Contractor not found")));
     }
 
     @Override
-    public List<Local_Contractor> findAllContractors() {
+    public List<Contractor> findAllContractors() {
         return repo.findAll();
     }
 }

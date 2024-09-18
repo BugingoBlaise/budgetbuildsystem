@@ -10,14 +10,13 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "admin")
-public class RHA_Administrator {
+public class Administrator {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String username;
     private String password;
-    @OneToMany(mappedBy = "administrators")
-    private List<Local_Contractor> contractor;
+
     @OneToMany(mappedBy = "administrator")
     private List<Supplier> suppliers;
     @OneToOne

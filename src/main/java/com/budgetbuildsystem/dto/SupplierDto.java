@@ -1,7 +1,7 @@
 package com.budgetbuildsystem.dto;
 
-import com.budgetbuildsystem.model.MaterialProcurement;
-import com.budgetbuildsystem.model.RHA_Administrator;
+import com.budgetbuildsystem.model.Materials;
+import com.budgetbuildsystem.model.Administrator;
 import com.budgetbuildsystem.model.User;
 import lombok.Data;
 
@@ -13,9 +13,9 @@ public class SupplierDto {
     private UUID id;
     private String supplierName;
     private String contactDetails;
-    private List<MaterialProcurement> materials;
+    private List<Materials> materials;
     private User user;
-    private RHA_Administrator administrator;
+    private Administrator administrator;
     private String userType;
     private String password;
 }

@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "regulations")
-public class BuildingRegulations {
+public class Regulations {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

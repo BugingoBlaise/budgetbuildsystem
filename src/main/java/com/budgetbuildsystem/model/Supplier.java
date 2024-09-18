@@ -24,10 +24,10 @@ public class Supplier {
     private int tinNumber;
     // Relationships
     @OneToMany(mappedBy = "supplier")
-    private List<MaterialProcurement> materials;
+    private List<Materials> materials;
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne
-    private RHA_Administrator administrator;
+    private Administrator administrator;
 }

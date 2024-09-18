@@ -1,9 +1,9 @@
-package com.budgetbuildsystem.service.recommendationsAndReviews;
+package com.budgetbuildsystem.service.recommendations;
 
 import com.budgetbuildsystem.exception.EmailNotFound;
 import com.budgetbuildsystem.model.Citizen;
-import com.budgetbuildsystem.model.ContractorRecommendation;
-import com.budgetbuildsystem.model.Local_Contractor;
+import com.budgetbuildsystem.model.Recommendation;
+import com.budgetbuildsystem.model.Contractor;
 import com.budgetbuildsystem.repository.IContractorRepository;
 import com.budgetbuildsystem.repository.IRecommendationsRepo;
 import com.budgetbuildsystem.service.citizen.ICitizenService;
@@ -61,22 +61,22 @@ public class IRecommendationServiceImpl implements IRecommendationService {
     }*/
 
     // List all contractors
-    public List<Local_Contractor> listAllContractors() {
+    public List<Contractor> listAllContractors() {
         return contractorRepository.findAll();
     }
 
     // Get contractor details by ID
-    public Optional<Local_Contractor> getContractorById(UUID contractorId) {
+    public Optional<Contractor> getContractorById(UUID contractorId) {
         return contractorRepository.findById(contractorId);
     }
 
     // Rate and comment on a contractor
-    public ContractorRecommendation rateAndComment(UUID contractorId, int rating, String comment, UUID citizenId) throws EmailNotFound {
-        Optional<Local_Contractor> contractorOptional = contractorRepository.findById(contractorId);
+    public Recommendation rateAndComment(UUID contractorId, int rating, String comment, UUID citizenId) throws EmailNotFound {
+        Optional<Contractor> contractorOptional = contractorRepository.findById(contractorId);
         Optional<Citizen> citizen = citizenService.getCitizenById(citizenId);
         if (contractorOptional.isPresent()) {
-            Local_Contractor contractor = contractorOptional.get();
-            ContractorRecommendation newReview = new ContractorRecommendation();
+            Contractor contractor = contractorOptional.get();
+            Recommendation newReview = new Recommendation();
             newReview.setRating(rating);
             newReview.setReviews(Collections.singletonList(comment));
             newReview.setContractor(contractor);
@@ -84,7 +84,7 @@ public class IRecommendationServiceImpl implements IRecommendationService {
             newReview.setDate(new java.util.Date());
             newReview.setLikeCount(0);
             // Save the new review
-            ContractorRecommendation savedReview = recommendationRepository.save(newReview);
+            Recommendation savedReview = recommendationRepository.save(newReview);
             // Update the contractor's reviews list and average rating
             contractor.getReviews().add(savedReview);
             updateContractorRating(contractor);
@@ -95,7 +95,7 @@ public class IRecommendationServiceImpl implements IRecommendationService {
     }
 
     // Calculate and update the contractor's average rating
-    public void updateContractorRating(Local_Contractor contractor) {
+    public void updateContractorRating(Contractor contractor) {
         double averageRating = calculateAverageRating(contractor.getId());
         contractor.setAverageRating(averageRating);
         contractorRepository.save(contractor);
@@ -103,15 +103,15 @@ public class IRecommendationServiceImpl implements IRecommendationService {
 
     // Calculate the average rating for a contractor
     public double calculateAverageRating(UUID contractorId) {
-        List<ContractorRecommendation> reviews = recommendationRepository.findContractorRecommendationsByContractor_Id(contractorId);
+        List<Recommendation> reviews = recommendationRepository.findContractorRecommendationsByContractor_Id(contractorId);
         return reviews.stream()
-                .mapToInt(ContractorRecommendation::getRating)
+                .mapToInt(Recommendation::getRating)
                 .average()
                 .orElse(0.0);
     }
 
     // Get all reviews for a contractor
-    public List<ContractorRecommendation> getReviewsForContractor(UUID contractorId) {
+    public List<Recommendation> getReviewsForContractor(UUID contractorId) {
         return recommendationRepository.findContractorRecommendationsByContractor_Id(contractorId);
     }
 }

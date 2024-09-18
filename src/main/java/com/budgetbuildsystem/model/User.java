@@ -23,12 +23,10 @@ public class User  {
     // Relationships to specific user types
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Citizen citizen;
-
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private RHA_Administrator administrator;
-
+    private Administrator administrator;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Local_Contractor contractor;
+    private Contractor contractor;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Supplier supplier;
 }

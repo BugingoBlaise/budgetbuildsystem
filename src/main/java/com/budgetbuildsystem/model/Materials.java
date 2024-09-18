@@ -5,22 +5,20 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
+
 @RequiredArgsConstructor
 @Data
 @Entity
-@Table(name = "loans")
-public class LoanAndFinancing {
+@Table(name = "materials")
+public class Materials {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
-    private String loanOptions;
-    private float interestRate;
-
-    // Relationships
+    private String materialName;
+    private String supplierDetails;
+    private float price;
     @ManyToOne
-    @JoinColumn(name = "citizen_id")
-    private Citizen citizen;
-
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
 
 }

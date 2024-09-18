@@ -1,7 +1,7 @@
 package com.budgetbuildsystem.service.regulations;
 
 import com.budgetbuildsystem.exception.BuildingRegulationNotFoundException;
-import com.budgetbuildsystem.model.BuildingRegulations;
+import com.budgetbuildsystem.model.Regulations;
 import com.budgetbuildsystem.repository.IRegulationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,24 +21,23 @@ public class RegulationServiceImpl implements IRegulationsService {
     private IRegulationRepository repository;
 
     @Override
-    public List<BuildingRegulations> getAllRegulations() {
+    public List<Regulations> getAllRegulations() {
         return repository.findAll();
     }
 
     @Override
-    public Optional<BuildingRegulations> getRegulationById(UUID id) {
+    public Optional<Regulations> getRegulationById(UUID id) {
         return Optional.ofNullable(repository.findById(id).orElseThrow(() -> new BuildingRegulationNotFoundException("Regulation with ID " + id + "")));
     }
 
     @Override
-    public BuildingRegulations saveRegulation(BuildingRegulations regulation) {
-
+    public Regulations saveRegulation(Regulations regulation) {
         return repository.save(regulation);
     }
 
     @Override
     public void deleteRegulationById(UUID id) {
-        Optional<BuildingRegulations> regulation = repository.findById(id);
+        Optional<Regulations> regulation = repository.findById(id);
         if (regulation.isEmpty()) {
             throw new BuildingRegulationNotFoundException("Regulation with ID " + id + " not found");
         }

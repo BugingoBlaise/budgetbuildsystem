@@ -23,14 +23,10 @@ public class Citizen {
     private String address;
     private String password;
     // Relationships
-    @OneToMany(mappedBy = "citizen")
-    private List<MaterialProcurement> procurements;
 
-    @OneToMany(mappedBy = "citizen")
-    private List<LoanAndFinancing> loans;
 
-    @OneToMany(mappedBy = "citizen")
-    private List<ContractorRecommendation> recommendations;
+     @OneToMany(mappedBy = "citizen")
+    private List<Recommendation> recommendations;
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;

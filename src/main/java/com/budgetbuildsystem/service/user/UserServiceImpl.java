@@ -40,7 +40,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Page<RHA_Administrator> getAllAdminUsers(Pageable pageable) {
+    public Page<Administrator> getAllAdminUsers(Pageable pageable) {
         return iAdminRepository.findAll(pageable);
     }
 

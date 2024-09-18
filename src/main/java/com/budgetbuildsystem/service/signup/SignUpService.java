@@ -2,7 +2,7 @@ package com.budgetbuildsystem.service.signup;
 
 import com.budgetbuildsystem.dto.SignupRequest;
 import com.budgetbuildsystem.model.Citizen;
-import com.budgetbuildsystem.model.Local_Contractor;
+import com.budgetbuildsystem.model.Contractor;
 import com.budgetbuildsystem.model.User;
 import com.budgetbuildsystem.model.enums.ERole;
 import com.budgetbuildsystem.service.citizen.ICitizenService;
@@ -78,7 +78,7 @@ public class SignUpService implements ISignUpService {
             user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
             user.setRoles(Set.of(String.valueOf(ERole.CONTRACTOR)));
 
-            Local_Contractor contractor = new Local_Contractor();
+            Contractor contractor = new Contractor();
 
             contractor.setCompanyName(signupRequest.getCompanyName());
             contractor.setLicenseNumber(signupRequest.getLicenseNumber());
