@@ -1,13 +1,13 @@
 package com.budgetbuildsystem.service.signup;
 
-import com.budgetbuildsystem.dto.SignupRequest;
+import com.budgetbuildsystem.dto.SignDto;
 
 public interface ISignUpService {
-    public void signupCitizen(SignupRequest signupRequest);
+    public void signupCitizen(SignDto signupRequest);
 
-    void signupContractor(SignupRequest signupRequest);
+    void signupContractor(SignDto signupRequest);
 
-    void signupAdministrator(SignupRequest signupRequest);
+    void signupAdministrator(SignDto signupRequest);
 
-    void signupSupplier(SignupRequest signupRequest);
+    void signupSupplier(SignDto signupRequest);
 }

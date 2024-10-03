@@ -19,7 +19,7 @@ public class CitizenServiceImpl implements ICitizenService {
     @Override
     public Citizen saveCitizen(Citizen citizen) {
         try {
-            Citizen newCitizen = new Citizen();
+            /*Citizen newCitizen = new Citizen();
             newCitizen.setFirstName(citizen.getFirstName());
             newCitizen.setLastName(citizen.getLastName());
             newCitizen.setEmail(citizen.getEmail());
@@ -27,7 +27,7 @@ public class CitizenServiceImpl implements ICitizenService {
             newCitizen.setPassword(citizen.getPassword());
             newCitizen.setAddress(citizen.getAddress());
             newCitizen.setPhoneNumber(citizen.getPhoneNumber());
-//            newCitizen.setGender(citizen.getGender());
+//            newCitizen.setGender(citizen.getGender());*/
             return citizenRepository.save(citizen);
         }catch (Exception e) {
             throw new RuntimeException();

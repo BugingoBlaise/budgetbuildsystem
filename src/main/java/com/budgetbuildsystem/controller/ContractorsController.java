@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/contractors")
+@RequestMapping("/api/contractors")
 public class ContractorsController {
     @Autowired
     private IContractorService contractorsService;

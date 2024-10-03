@@ -1,5 +1,6 @@
 package com.budgetbuildsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +22,6 @@ public class Administrator {
     private List<Supplier> suppliers;
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 }

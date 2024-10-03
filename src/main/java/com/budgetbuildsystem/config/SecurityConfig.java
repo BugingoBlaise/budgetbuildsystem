@@ -26,23 +26,24 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers(
-                                        "/api/auth/signup/**",
-                                        "/api/contractors/**").permitAll() // Permit access to sign-up endpoints
-                                .requestMatchers("/api/auth/login/**").permitAll()
-                                .requestMatchers("/api/regulations/**").permitAll()
-                                .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/api/loans/**").permitAll()
-//                        .requestMatchers("/home","/register/**").permitAll()
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/user/**").hasRole("USER")
+                        .requestMatchers(
+                                "/api/auth/signup/**",
+                                "/api/contractors/**").permitAll() // Permit access to sign-up endpoints
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/regulations/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/loans/**").permitAll()
+                        .requestMatchers("/api/users/**").permitAll()
+                        .requestMatchers("/home", "/register/**").permitAll()
+                        /*             .requestMatchers("/admin/**").hasRole("ADMIN")
+                                     .requestMatchers("/user/**").hasRole("USER")
 
-                                .requestMatchers("/contractor/**").hasRole("CONTRACTOR")
-                                .requestMatchers("/citizen/**").hasRole("CITIZEN")
-                                .requestMatchers("/supplier/**").hasRole("SUPPLIER")
+                                     .requestMatchers("/contractor/**").hasRole("CONTRACTOR")
+                                     .requestMatchers("/citizen/**").hasRole("CITIZEN")
+                                     .requestMatchers("/supplier/**").hasRole("SUPPLIER")*/
 
 
-                                .anyRequest().authenticated()
+                        .anyRequest().authenticated()
                 )
                 .formLogin(httpSecurityFormLoginConfigurer -> {
                     httpSecurityFormLoginConfigurer

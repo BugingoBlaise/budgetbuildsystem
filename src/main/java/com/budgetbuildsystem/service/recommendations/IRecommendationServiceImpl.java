@@ -86,7 +86,7 @@ public class IRecommendationServiceImpl implements IRecommendationService {
             // Save the new review
             Recommendation savedReview = recommendationRepository.save(newReview);
             // Update the contractor's reviews list and average rating
-            contractor.getReviews().add(savedReview);
+            contractor.getReview().add(savedReview);
             updateContractorRating(contractor);
             return savedReview;
         } else {
@@ -96,7 +96,7 @@ public class IRecommendationServiceImpl implements IRecommendationService {
 
     // Calculate and update the contractor's average rating
     public void updateContractorRating(Contractor contractor) {
-        double averageRating = calculateAverageRating(contractor.getId());
+        float averageRating = (float) calculateAverageRating(contractor.getId());
         contractor.setAverageRating(averageRating);
         contractorRepository.save(contractor);
     }
@@ -104,7 +104,7 @@ public class IRecommendationServiceImpl implements IRecommendationService {
     // Calculate the average rating for a contractor
     public double calculateAverageRating(UUID contractorId) {
         List<Recommendation> reviews = recommendationRepository.findContractorRecommendationsByContractor_Id(contractorId);
-        return reviews.stream()
+        return (float) reviews.stream()
                 .mapToInt(Recommendation::getRating)
                 .average()
                 .orElse(0.0);

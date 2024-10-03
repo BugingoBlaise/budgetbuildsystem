@@ -1,5 +1,6 @@
 package com.budgetbuildsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -13,21 +14,19 @@ public class Citizen {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
     private String firstName;
     private String lastName;
     private String email;
     private String phoneNumber;
-//    private String username;
-    /*  @Enumerated(EnumType.STRING)
-    private EGender gender;*/
     private String address;
-    private String password;
-    // Relationships
 
-
-     @OneToMany(mappedBy = "citizen")
+    @OneToMany(mappedBy = "citizen")
+    @JsonIgnore
     private List<Recommendation> recommendations;
+
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 }

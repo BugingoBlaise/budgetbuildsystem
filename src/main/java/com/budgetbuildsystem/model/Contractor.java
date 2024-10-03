@@ -1,10 +1,12 @@
 package com.budgetbuildsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -23,13 +25,13 @@ public class Contractor {
     private String contactDetails;
     private String licenseNumber;
     private String address;
-    private Double averageRating;
+    private float averageRating;
     @Lob
     private byte[] profilePic;
     @OneToMany(mappedBy = "contractor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Recommendation> reviews;
+    private Set<Recommendation> review=new HashSet<>(0);
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
-
-}
+ }
