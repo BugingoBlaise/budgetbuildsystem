@@ -9,7 +9,7 @@ public interface IContractorService {
     void saveContractor(Contractor contractor);
 
     Optional<Contractor> findByName(String contractorName);
-
+Optional<Contractor>findContractorByEmailAndUsername(String email,String username);
 
     List<Contractor> findAllContractors();
 

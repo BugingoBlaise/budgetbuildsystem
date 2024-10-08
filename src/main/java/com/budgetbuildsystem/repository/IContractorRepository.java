@@ -8,4 +8,5 @@ import java.util.UUID;
 
 public interface IContractorRepository extends JpaRepository<Contractor, UUID> {
      Optional<Contractor> findByCompanyName(String companyName);
+     Optional<Contractor> findContractorByEmailAndUsername(String email,String username);
 }

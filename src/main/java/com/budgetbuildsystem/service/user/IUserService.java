@@ -13,6 +13,7 @@ import java.util.UUID;
 
 public interface IUserService {
     User signUpUser(SignDto signDto);
+    void deleteUser(UUID id);
 
     Optional<User> findByUser(String username);
     Optional<User>findById(UUID id);
