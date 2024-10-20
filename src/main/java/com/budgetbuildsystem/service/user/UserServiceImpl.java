@@ -88,6 +88,7 @@ public class UserServiceImpl implements IUserService {
 
         }
 
+
         return user;
     }
 
@@ -140,6 +141,16 @@ public class UserServiceImpl implements IUserService {
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public List<Contractor> getContractors() {
+        return contractorRepository.findAll();
+    }
+
+    @Override
+    public List<Supplier> loadSuppliers() {
+        return supplierRepository.findAll();
     }
 
 }

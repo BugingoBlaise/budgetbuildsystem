@@ -25,7 +25,7 @@ public class Citizen {
     @JsonIgnore
     private List<Recommendation> recommendations;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;

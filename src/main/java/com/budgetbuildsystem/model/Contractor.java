@@ -26,11 +26,10 @@ public class Contractor {
     private String licenseNumber;
     private String address;
     private float averageRating;
-    @Lob
-    private byte[] profilePic;
+    private String profilePic;
     @OneToMany(mappedBy = "contractor", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Recommendation> review=new HashSet<>(0);
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;

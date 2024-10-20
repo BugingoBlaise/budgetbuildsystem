@@ -26,7 +26,7 @@ public class Supplier {
     // Relationships
     @OneToMany(mappedBy = "supplier")
     private List<Materials> materials;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;

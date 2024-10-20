@@ -17,6 +17,7 @@ public class Materials {
     private String materialName;
     private String supplierDetails;
     private float price;
+    private String imagePath;
     @ManyToOne
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;

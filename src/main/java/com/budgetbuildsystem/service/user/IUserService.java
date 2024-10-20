@@ -1,9 +1,7 @@
 package com.budgetbuildsystem.service.user;
 
 import com.budgetbuildsystem.dto.SignDto;
-import com.budgetbuildsystem.model.Administrator;
-import com.budgetbuildsystem.model.Citizen;
-import com.budgetbuildsystem.model.User;
+import com.budgetbuildsystem.model.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -23,6 +21,10 @@ public interface IUserService {
     Page<Administrator> getAllAdminUsers(Pageable pageable);
 
     List<User> findAll();
+
+    List<Contractor> getContractors();
+
+    List<Supplier> loadSuppliers();
 
   /* User saveContractor(Local_Contractor contractor);
    User signUpSupplier(Supplier supplier);*/

@@ -20,7 +20,7 @@ public class Administrator {
 
     @OneToMany(mappedBy = "administrator")
     private List<Supplier> suppliers;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;

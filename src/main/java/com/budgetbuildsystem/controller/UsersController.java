@@ -41,5 +41,21 @@ public class UsersController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not delete Entity: " + e.getMessage());
         }
     }
+    @GetMapping("/loadContractors")
+    public ResponseEntity<?> loadContractors() {
+        try {
+            return ResponseEntity.ok(iUserService.getContractors());
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    @GetMapping("/loadSuppliers")
+    public  ResponseEntity<?>getSuppliers(){
+        try {
+            return ResponseEntity.ok(iUserService.loadSuppliers());
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 }

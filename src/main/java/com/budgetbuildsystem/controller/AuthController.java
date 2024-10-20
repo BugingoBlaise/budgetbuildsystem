@@ -2,6 +2,7 @@ package com.budgetbuildsystem.controller;
 
 import com.budgetbuildsystem.dto.LoginRequest;
 import com.budgetbuildsystem.dto.SignDto;
+import com.budgetbuildsystem.model.User;
 import com.budgetbuildsystem.service.user.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,10 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody SignDto signDto) {
         try{
-            userService.signUpUser(signDto);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+         User user =   userService.signUpUser(signDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(user);
         }catch  (Exception ex){
-            return new ResponseEntity<>("ERRORS OCCURRED DURING SIGNUP PROCESS", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
     }

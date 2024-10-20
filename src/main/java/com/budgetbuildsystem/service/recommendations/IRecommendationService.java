@@ -9,11 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface IRecommendationService {
-   /* List<ContractorRecommendation> getReviewsForContractor(UUID contractorId);
-    Optional<Local_Contractor> getContractorById(UUID contractorId);
-    ContractorRecommendation addReview(UUID contractorId, ContractorRecommendation review);
-    public double calculateAverageRating(UUID contractorId);
-*/
+
     public List<Contractor> listAllContractors();
     Optional<Contractor> getContractorById(UUID contractorId);
     Recommendation rateAndComment(UUID contractorId, int rating, String comment, UUID citizenId) throws EmailNotFound;
