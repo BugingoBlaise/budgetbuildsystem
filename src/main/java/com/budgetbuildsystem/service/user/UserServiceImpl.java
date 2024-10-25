@@ -81,6 +81,7 @@ public class UserServiceImpl implements IUserService {
                     contractor.setContactDetails(signDto.getContactDetails());
                     contractor.setLicenseNumber(signDto.getLicenseNumber());
                     contractor.setAddress(signDto.getAddress());
+                    contractor.setProfilePic(signDto.getProfilePic());
                     contractor.setUser(user);
                     contractorRepository.save(contractor);
                     break;

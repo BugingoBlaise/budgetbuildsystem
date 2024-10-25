@@ -35,11 +35,11 @@ public class CitizenServiceImpl implements ICitizenService {
     }
 
     @Override
-    public Optional<Citizen> getCitizenById(UUID id) throws EmailNotFound {
+    public Optional<Citizen> getCitizenById(UUID id)  {
         try {
             return citizenRepository.findById(id);
         } catch (Exception e) {
-            throw new EmailNotFound("Email not found");
+            throw new RuntimeException();
         }
     }
 

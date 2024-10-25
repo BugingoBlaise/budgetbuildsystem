@@ -23,4 +23,7 @@ public class SignDto {
     private int tinNumber;
     private String contactDetails;
     private String licenseNumber;
+
+    //fields for contractor
+    private String  profilePic;
 }

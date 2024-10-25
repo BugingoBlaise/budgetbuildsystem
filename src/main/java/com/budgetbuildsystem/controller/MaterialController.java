@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,7 +45,7 @@ public class MaterialController {
             newMaterial.setMaterialName(materialName);
             newMaterial.setSupplierDetails(supplierDetails);
             newMaterial.setPrice(price);
-
+            newMaterial.setPostedDate(new Date());
 /*            if (session.getAttribute("currentUser") == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
             }*/
@@ -52,7 +53,7 @@ public class MaterialController {
             if (imagePath != null && !imagePath.isEmpty()) {
                 String fileName = fileService.storeFile(imagePath);
                 newMaterial.setImagePath(fileName);
-                log.info("STored successfully");
+
             }
             Supplier supplier = (Supplier) session.getAttribute("currentUser");
             if (supplier != null) newMaterial.setSupplier(supplier);

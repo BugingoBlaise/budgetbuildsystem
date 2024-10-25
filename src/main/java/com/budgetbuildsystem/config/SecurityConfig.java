@@ -20,7 +20,6 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Autowired
     MyUserDetailService userDetailService;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -42,17 +41,15 @@ public class SecurityConfig {
                                      .requestMatchers("/contractor/**").hasRole("CONTRACTOR")
                                      .requestMatchers("/citizen/**").hasRole("CITIZEN")
                                      .requestMatchers("/supplier/**").hasRole("SUPPLIER")*/
-
-
                         .anyRequest().authenticated()
                 )
                 .formLogin(httpSecurityFormLoginConfigurer -> {
                     httpSecurityFormLoginConfigurer
                             .loginPage("/login")
+
                             .successHandler(new AuthenticationSuccessHandler())
                             .permitAll();
                 });
-
         return http.build();
     }
 

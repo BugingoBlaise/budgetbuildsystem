@@ -1,12 +1,13 @@
 package com.budgetbuildsystem.service.recommendations;
 
-import com.budgetbuildsystem.exception.EmailNotFound;
 import com.budgetbuildsystem.model.Citizen;
-import com.budgetbuildsystem.model.Recommendation;
 import com.budgetbuildsystem.model.Contractor;
+import com.budgetbuildsystem.model.Recommendation;
 import com.budgetbuildsystem.repository.IContractorRepository;
 import com.budgetbuildsystem.repository.IRecommendationsRepo;
 import com.budgetbuildsystem.service.citizen.ICitizenService;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,20 +16,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
-
+@RequiredArgsConstructor
 @Transactional
 @Service
 public class IRecommendationServiceImpl implements IRecommendationService {
     private final IRecommendationsRepo recommendationRepository;
     private final IContractorRepository contractorRepository;
     private final ICitizenService citizenService;
-
-    public IRecommendationServiceImpl(IRecommendationsRepo recommendationRepository, IContractorRepository contractorRepository, ICitizenService citizenService) {
-        this.recommendationRepository = recommendationRepository;
-        this.contractorRepository = contractorRepository;
-        this.citizenService = citizenService;
-    }
 
    /* public Optional<ContractorRecommendation> getReviewsForContractor(UUID contractorId) {
         return recommendationRepository.findById(contractorId);
@@ -71,7 +65,7 @@ public class IRecommendationServiceImpl implements IRecommendationService {
     }
 
     // Rate and comment on a contractor
-    public Recommendation rateAndComment(UUID contractorId, int rating, String comment, UUID citizenId) throws EmailNotFound {
+    public Recommendation rateAndComment(UUID contractorId, int rating, String comment, UUID citizenId) {
         Optional<Contractor> contractorOptional = contractorRepository.findById(contractorId);
         Optional<Citizen> citizen = citizenService.getCitizenById(citizenId);
         if (contractorOptional.isPresent()) {
@@ -82,7 +76,7 @@ public class IRecommendationServiceImpl implements IRecommendationService {
             newReview.setContractor(contractor);
             citizen.ifPresent(newReview::setCitizen);// Assuming Citizen ID is passed in for reference
             newReview.setDate(new java.util.Date());
-            newReview.setLikeCount(0);
+            newReview.setLikeCount(newReview.getLikeCount()+1);
             // Save the new review
             Recommendation savedReview = recommendationRepository.save(newReview);
             // Update the contractor's reviews list and average rating
@@ -90,7 +84,7 @@ public class IRecommendationServiceImpl implements IRecommendationService {
             updateContractorRating(contractor);
             return savedReview;
         } else {
-            throw new RuntimeException("Contractor not found with ID: " + contractorId);
+            throw new EntityNotFoundException("Contractor not found with ID: " + contractorId);
         }
     }
 
@@ -103,7 +97,8 @@ public class IRecommendationServiceImpl implements IRecommendationService {
 
     // Calculate the average rating for a contractor
     public double calculateAverageRating(UUID contractorId) {
-        List<Recommendation> reviews = recommendationRepository.findContractorRecommendationsByContractor_Id(contractorId);
+        List<Recommendation> reviews =
+                recommendationRepository.findContractorRecommendationsByContractor_Id(contractorId);
         return (float) reviews.stream()
                 .mapToInt(Recommendation::getRating)
                 .average()

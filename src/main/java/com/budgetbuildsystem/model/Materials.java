@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Date;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -18,6 +19,7 @@ public class Materials {
     private String supplierDetails;
     private float price;
     private String imagePath;
+    private Date postedDate;
     @ManyToOne
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
