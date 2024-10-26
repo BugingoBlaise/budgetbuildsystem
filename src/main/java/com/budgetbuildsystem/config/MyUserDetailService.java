@@ -1,26 +1,22 @@
 package com.budgetbuildsystem.config;
 
-import com.budgetbuildsystem.model.User;
 import com.budgetbuildsystem.repository.IUserRepository;
 import com.budgetbuildsystem.service.user.IUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class MyUserDetailService implements UserDetailsService {
     private final IUserService userService;
     private final IUserRepository repository;
-/*
-    @Override
+
+    /*@Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-       *//* Optional<MyUser> user = repository.findByUsername(username);
+//         Optional<MyUser> user = repository.findByUsername(username);
 
         if (user.isPresent()) {
             var userObj = user.get();
@@ -31,7 +27,7 @@ public class MyUserDetailService implements UserDetailsService {
                     .build();
         } else {
             throw new UsernameNotFoundException(username);
-        }*/
+        } */
     /*
         Optional<User> user = userService.findByUser(username);
         if (user.isPresent()) {
@@ -56,14 +52,14 @@ public class MyUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = repository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-        return new org.springframework.security.core.userdetails.User(
+      return repository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("This username is not found: " + username));
+        /*return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
                 user.getRoles().stream()
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList())
-        );
+        );*/
     }
 }
