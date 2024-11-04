@@ -1,8 +1,7 @@
 package com.budgetbuildsystem.controller;
 
-import com.budgetbuildsystem.exception.EmailNotFound;
-import com.budgetbuildsystem.model.Recommendation;
 import com.budgetbuildsystem.model.Contractor;
+import com.budgetbuildsystem.model.Recommendation;
 import com.budgetbuildsystem.service.contractor.IContractorService;
 import com.budgetbuildsystem.service.recommendations.IRecommendationService;
 import org.springframework.http.HttpStatus;
@@ -15,11 +14,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/contractors")
-public class ContractorRecommendationController {
+public class RecomendationController {
     private final IRecommendationService recommendationService;
     private final IContractorService contractorService;
 
-    public ContractorRecommendationController(IRecommendationService recommendationService,IContractorService contractorService) {
+    public RecomendationController(IRecommendationService recommendationService, IContractorService contractorService) {
         this.recommendationService = recommendationService;
         this.contractorService = contractorService;
     }
@@ -66,17 +65,18 @@ public class ContractorRecommendationController {
         return ResponseEntity.ok(contractor);
     }
 
-    @PostMapping("/{contractorId}/review")
-    public ResponseEntity<Recommendation> rateAndComment(
+    @PutMapping("/review/{contractorId}")
+    public ResponseEntity<?> rateAndComment(
             @PathVariable UUID contractorId,
-            @RequestParam int rating,
-            @RequestParam String comment,
-            @RequestParam UUID citizenId) throws EmailNotFound {
+            @RequestParam("comment") String comment,
+            @RequestParam("rating") int rating,
+            @RequestParam("citizenId") UUID citizenId)   {
         try {
-            Recommendation review = recommendationService.rateAndComment(contractorId, rating, comment, citizenId);
+            Recommendation review = recommendationService.
+                    rateAndComment(contractorId, comment, rating, citizenId);
             return ResponseEntity.status(HttpStatus.CREATED).body(review);
         } catch (Exception ex) {
-            throw new EmailNotFound("Email not found");
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

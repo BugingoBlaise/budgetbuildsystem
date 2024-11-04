@@ -27,18 +27,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-      return  http
+        return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/api/auth/signup","/api/auth/login").permitAll()
+                                .requestMatchers("/api/auth/signup", "/api/auth/login").permitAll()
                                 .requestMatchers("/supplier-only").hasAuthority("ROLE_SUPPLIER")
-//
-//                                .requestMatchers("/api/contractors/**").permitAll()
-//                        .requestMatchers("/api/regulations/**").permitAll()
-//                        .requestMatchers("/api/auth/**").permitAll()
-//                        .requestMatchers("/api/loans/**").permitAll()
-//                        .requestMatchers("/api/materials/**").permitAll()
-//                        .requestMatchers("/api/users/**").permitAll()
+                                .requestMatchers("/api/contractors/**").hasAnyAuthority("ROLE_CITIZEN", "ROLE_SUPPLIER")
+                                .requestMatchers("/api/regulations/**").permitAll()
+                                .requestMatchers("/api/loans/**").permitAll()
+                                .requestMatchers("/api/materials/**").permitAll()
+                                .requestMatchers("/api/users/**").permitAll()
 //                        .requestMatchers("/home", "/register/**").permitAll()
                                 /*             .requestMatchers("/admin/**").hasRole("ADMIN")
                                              .requestMatchers("/user/**").hasRole("USER")
@@ -50,7 +48,7 @@ public class SecurityConfig {
                                 .authenticated()
                 )
                 .userDetailsService(userDetailService)
-                .sessionManagement(session->session
+                .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -74,6 +72,7 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();

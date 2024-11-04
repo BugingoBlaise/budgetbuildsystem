@@ -1,21 +1,24 @@
 package com.budgetbuildsystem.service.authentication;
 
+import com.budgetbuildsystem.dto.AuthResponse;
 import com.budgetbuildsystem.dto.LoginRequest;
 import com.budgetbuildsystem.dto.SignDto;
 import com.budgetbuildsystem.model.*;
 import com.budgetbuildsystem.repository.*;
 import com.budgetbuildsystem.util.JwtService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-@Service
+@Service@Transactional@Slf4j
 public class AuthenticationService {
     @Autowired
     ICitizenRepository citizenRepository;
@@ -34,12 +37,12 @@ public class AuthenticationService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(SignDto signDto) {
+    public AuthResponse register(SignDto signDto) {
 
         User user = new User();
 
         user.setUsername(signDto.getUsername());
-        user.setPassword( passwordEncoder.encode(signDto.getPassword()));
+        user.setPassword(passwordEncoder.encode(signDto.getPassword()));
         Set<String> roles = new HashSet<>();
         roles.add("ROLE_" + signDto.getUserType().toString().toUpperCase());
         user.setRoles(roles);
@@ -73,18 +76,16 @@ public class AuthenticationService {
                 if (checkContractor.isPresent()) {
                     throw new IllegalArgumentException("Contractor with email and username already exists.");
                 } else {
-
                     Contractor contractor = getContractor(signDto, user);
                     contractorRepository.save(contractor);
                     break;
                 }
-                default:
-                    throw new IllegalArgumentException("Invalid user type.");
-
+            default:
+                throw new IllegalArgumentException("Invalid user type.");
         }
 
         String token = jwtService.generateToken(user);
-        return new AuthenticationResponse(token);
+        return new AuthResponse(user.getUsername(), user.getRoles().toString(),token);
 
     }
 
@@ -96,6 +97,7 @@ public class AuthenticationService {
         contractor.setPhoneNumber(signDto.getPhoneNumber());
         contractor.setUsername(signDto.getUsername());
         contractor.setContactDetails(signDto.getContactDetails());
+        log.info("LICENCE NUMBER IS {}",signDto.getLicenseNumber());
         contractor.setLicenseNumber(signDto.getLicenseNumber());
         contractor.setAddress(signDto.getAddress());
         contractor.setProfilePic(signDto.getProfilePic());
@@ -116,7 +118,7 @@ public class AuthenticationService {
         return supplier;
     }
 
-    public AuthenticationResponse authenticate(LoginRequest request) {
+    public AuthResponse authenticate(LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -124,11 +126,12 @@ public class AuthenticationService {
                 )
         );
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
-
-
+        String username = user.getUsername();
+        String role = user.getRoles().toString();
+        // Generate token for the authenticated user and return it in the response.
         String token = jwtService.generateToken(user);
 
-        return new AuthenticationResponse(token);
+        return new AuthResponse( username,role,token);
 
     }
 

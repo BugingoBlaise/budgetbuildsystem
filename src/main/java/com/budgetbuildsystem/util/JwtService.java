@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.Set;
 import java.util.function.Function;
 
 @Service
@@ -18,6 +19,9 @@ public class JwtService {
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+    public Set<String> extractRoles(String token) {
+        return extractClaim(token, claims -> claims.get("roles", Set.class));
     }
 
 
@@ -43,18 +47,19 @@ public class JwtService {
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parser()
-                .verifyWith(getSignInKey())
+                .setSigningKey(getSignInKey())
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
-
+                .parseClaimsJws(token)
+                .getBody();
     }
+
 
 
     public String generateToken(User user) {
         return Jwts
                 .builder()
                 .subject(user.getUsername())
+                .claim("roles",user.getRoles())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))
                 .signWith(getSignInKey())

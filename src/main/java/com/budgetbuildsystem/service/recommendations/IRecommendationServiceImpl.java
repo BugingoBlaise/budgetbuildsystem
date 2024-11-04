@@ -65,7 +65,12 @@ public class IRecommendationServiceImpl implements IRecommendationService {
     }
 
     // Rate and comment on a contractor
-    public Recommendation rateAndComment(UUID contractorId, int rating, String comment, UUID citizenId) {
+    public Recommendation rateAndComment(
+            UUID contractorId,
+            String comment,
+            int rating,
+
+            UUID citizenId) {
         Optional<Contractor> contractorOptional = contractorRepository.findById(contractorId);
         Optional<Citizen> citizen = citizenService.getCitizenById(citizenId);
         if (contractorOptional.isPresent()) {

@@ -11,7 +11,10 @@ public interface IRecommendationService {
 
     public List<Contractor> listAllContractors();
     Optional<Contractor> getContractorById(UUID contractorId);
-    Recommendation rateAndComment(UUID contractorId, int rating, String comment, UUID citizenId) ;
+    Recommendation rateAndComment(UUID contractorId,
+                                  String comment,
+                                  int rating,
+                                  UUID citizenId) ;
     void updateContractorRating(Contractor contractor);
     double calculateAverageRating(UUID contractorId);
     List<Recommendation> getReviewsForContractor(UUID contractorId);

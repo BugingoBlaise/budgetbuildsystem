@@ -14,7 +14,6 @@ public class Citizen {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
     private String firstName;
     private String lastName;
     private String email;
