@@ -51,6 +51,7 @@ public class UserServiceImpl implements IUserService {
             case "ADMIN":
                 Administrator admin = new Administrator();
                 admin.setUsername(signDto.getUsername());
+                admin.setPassword(signDto.getPassword());
                 admin.setUser(user);
                 iAdminRepository.save(admin);
                 break;
@@ -113,6 +114,7 @@ public class UserServiceImpl implements IUserService {
                 }
                 userRepository.deleteById(id);
             } else {
+
                 throw new EntityNotFoundException("User with id ::" + id + " not found.");
             }
     }

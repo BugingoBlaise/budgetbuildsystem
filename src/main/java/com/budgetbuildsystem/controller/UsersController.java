@@ -24,23 +24,27 @@ public class UsersController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
     @GetMapping("/{Id}")
-    public ResponseEntity<?>findUserById(@PathVariable UUID Id){
-        try{
+    public ResponseEntity<?> findUserById(@PathVariable UUID Id) {
+        try {
             return ResponseEntity.ok(iUserService.findById(Id));
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
     @DeleteMapping("/deleteAccount/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable UUID id) {
         try {
-                iUserService.deleteUser(id);
-                return ResponseEntity.ok().build();
+            log.info("Deleting user with id: {}", id);
+            iUserService.deleteUser(id);
+            return ResponseEntity.status(HttpStatus.OK).body("DELETED SUCCESSFULLY");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not delete Entity: " + e.getMessage());
         }
     }
+
     @GetMapping("/loadContractors")
     public ResponseEntity<?> loadContractors() {
         try {
@@ -49,8 +53,9 @@ public class UsersController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
     @GetMapping("/loadSuppliers")
-    public  ResponseEntity<?>getSuppliers(){
+    public ResponseEntity<?> getSuppliers() {
         try {
             return ResponseEntity.ok(iUserService.loadSuppliers());
         } catch (Exception exception) {

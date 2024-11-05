@@ -32,18 +32,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/api/auth/signup", "/api/auth/login").permitAll()
                                 .requestMatchers("/supplier-only").hasAuthority("ROLE_SUPPLIER")
-                                .requestMatchers("/api/contractors/**").hasAnyAuthority("ROLE_CITIZEN", "ROLE_SUPPLIER")
+                                .requestMatchers("/api/contractors/**").permitAll() // .hasAnyAuthority("ROLE_CITIZEN", "ROLE_SUPPLIER")
                                 .requestMatchers("/api/regulations/**").permitAll()
                                 .requestMatchers("/api/loans/**").permitAll()
                                 .requestMatchers("/api/materials/**").permitAll()
-                                .requestMatchers("/api/users/**").permitAll()
-//                        .requestMatchers("/home", "/register/**").permitAll()
-                                /*             .requestMatchers("/admin/**").hasRole("ADMIN")
-                                             .requestMatchers("/user/**").hasRole("USER")
-
-                                             .requestMatchers("/contractor/**").hasRole("CONTRACTOR")
-                                             .requestMatchers("/citizen/**").hasRole("CITIZEN")
-                                             .requestMatchers("/supplier/**").hasRole("SUPPLIER")*/
+                                .requestMatchers("/api/users/**").hasAuthority("ROLE_ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 )
@@ -53,12 +46,6 @@ public class SecurityConfig {
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
-               /* .formLogin(httpSecurityFormLoginConfigurer -> {
-                    httpSecurityFormLoginConfigurer
-                            .loginPage("/login")
-
-                            .successHandler(new AuthenticationSuccessHandler())
-                            .permitAll();*/
 
     }
 
@@ -80,24 +67,5 @@ public class SecurityConfig {
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
-    /*@Bean
-    public UserDetailsService userDetailsService() {
-        return userDetailService;
-    }*/
-
-   /* @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-        configuration.setAllowedMethods(List.of("GET","POST"));
-        configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-
-        source.registerCorsConfiguration("/**",configuration);
-
-        return source;
-    }*/
 
 }

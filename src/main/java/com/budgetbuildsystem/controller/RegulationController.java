@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -45,7 +46,7 @@ public class RegulationController {
             Regulations newRegulation = new Regulations();
             newRegulation.setRegulationTitle(regulationTitle);
             newRegulation.setRegulationDetails(regulationDetails);
-
+            newRegulation.setDate(new Date());
             if (regulationImage != null && !regulationImage.isEmpty()) {
                 String fileName = fileService.storeFile(regulationImage);
                 newRegulation.setRegulationImagePath(fileName);
@@ -110,6 +111,7 @@ public class RegulationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not delete file: " + e.getMessage());
         }
     }
+
     @GetMapping("/image/{imageName}")
     public ResponseEntity<Resource> getImage(@PathVariable String imageName) throws IOException {
         Resource file = fileService.loadFileAsResource(imageName);

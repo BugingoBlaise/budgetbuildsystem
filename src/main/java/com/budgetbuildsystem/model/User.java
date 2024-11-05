@@ -58,28 +58,28 @@ public  class User implements UserDetails {
         if (contractor != null) return contractor;
         return null;
     }
-
+//@JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
-
+//@JsonIgnore
 
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
-
+//    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
-
+//    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
+//    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;
