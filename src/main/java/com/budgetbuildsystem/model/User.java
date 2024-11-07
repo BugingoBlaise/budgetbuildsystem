@@ -3,8 +3,9 @@ package com.budgetbuildsystem.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
-@Data
+@Getter@Setter
 @Entity
 @Table(name = "users")
 public  class User implements UserDetails {
@@ -58,29 +59,24 @@ public  class User implements UserDetails {
         if (contractor != null) return contractor;
         return null;
     }
-//@JsonIgnore
-    @Override
+     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
-//@JsonIgnore
 
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
-//    @JsonIgnore
-    @Override
+     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
-//    @JsonIgnore
-    @Override
+     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
-//    @JsonIgnore
-    @Override
+     @Override
     public boolean isEnabled() {
         return true;
     }

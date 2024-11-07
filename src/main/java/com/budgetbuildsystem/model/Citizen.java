@@ -2,13 +2,14 @@ package com.budgetbuildsystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.UUID;
 @RequiredArgsConstructor
-@Data
+@Getter@Setter
 @Entity
 public class Citizen {
     @Id

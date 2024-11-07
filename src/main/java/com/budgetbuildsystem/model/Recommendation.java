@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +20,7 @@ public class Recommendation {
     private int rating;
     @ElementCollection
     @CollectionTable(name = "review_tags", joinColumns = @JoinColumn(name = "post_id"))
-    private List<String> reviews = new ArrayList<>();
+    private List<String> reviews;
     private Date date;
     @ManyToOne
     @JoinColumn(name = "citizen_id")

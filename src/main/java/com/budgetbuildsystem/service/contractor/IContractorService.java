@@ -4,6 +4,7 @@ import com.budgetbuildsystem.model.Contractor;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface IContractorService {
     void saveContractor(Contractor contractor);
@@ -13,6 +14,7 @@ public interface IContractorService {
     Optional<Contractor> findContractorByEmailAndUsername(String email, String username);
 
     List<Contractor> findAllContractors();
+    Optional<Contractor>getContractorById(UUID uuid);
 
 
 }

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Transactional
 @Service
@@ -50,5 +51,10 @@ public class ContractorServiceImpl implements IContractorService {
     @Override
     public List<Contractor> findAllContractors() {
         return repo.findAll();
+    }
+
+    @Override
+    public Optional<Contractor> getContractorById(UUID uuid) {
+        return Optional.ofNullable(repo.findById(uuid).orElseThrow(()->new EntityNotFoundException("Contractor of ID : {}"+uuid+ "NOT FOUND")));
     }
 }
