@@ -11,6 +11,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Data
 @Entity
+
 @Table(name = "reviews_recommendation")
 public class Recommendation {
     @Id

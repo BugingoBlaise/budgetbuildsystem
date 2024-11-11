@@ -15,6 +15,7 @@ public interface IRecommendationService {
                                    List<String> reviews,
                                    int rating,
                                    UUID citizenId) ;
-      List<Recommendation> updateAverageRatingForContractor(UUID contractorId);
-    List<Recommendation> getReviewsForContractor(UUID contractorId);
+
+
+    List<Recommendation>findRecommendationsByContractor(Contractor contractor);
 }

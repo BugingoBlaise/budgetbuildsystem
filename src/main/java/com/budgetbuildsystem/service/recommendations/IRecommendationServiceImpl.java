@@ -39,69 +39,59 @@ public class IRecommendationServiceImpl implements IRecommendationService {
         return contractorRepository.findById(contractorId);
     }
 
-    public Recommendation rateAndComment(
-            UUID contractorId,
-            List<String> reviews,
-            int rating,
-            UUID citizenId
-    ) {
-        // Retrieve contractor and citizen, throwing an exception if not found
+    public Recommendation rateAndComment(UUID contractorId, List<String> reviews, int rating, UUID citizenId) {
+        // Fetch Contractor and Citizen, throw if not found
         Contractor contractor = contractorRepository.findById(contractorId)
                 .orElseThrow(() -> new EntityNotFoundException("Contractor not found with ID: " + contractorId));
         Citizen citizen = citizenService.getCitizenById(citizenId)
                 .orElseThrow(() -> new EntityNotFoundException("Citizen not found with ID: " + citizenId));
 
-        // Create and populate a new Recommendation
+        // Create and save the new Recommendation
         Recommendation newReview = new Recommendation();
         newReview.setRating(rating);
         newReview.setCitizen(citizen);
         newReview.setContractor(contractor);
         newReview.setDate(new Date());
-        newReview.setLikeCount(newReview.getLikeCount() + 1);
+        newReview.setLikeCount(1);  // Set initial like count
         newReview.setReviews(reviews);
-
-        // Save the new Recommendation
         Recommendation savedReview = recommendationRepository.save(newReview);
-
-        // Add the saved review to the contractor's review set
-        contractor.getReview().add(savedReview);
-
-        // Calculate the average rating
-        double averageRating = contractor.getReview().stream()
-                .mapToInt(Recommendation::getRating)
-                .average()
-                .orElse(0.0);
-
-        // Update the contractor's average rating
-        contractor.setAverageRating((float) averageRating);
-        contractorRepository.save(contractor);
-
+        updateAverageRatingForContractor(contractor);
         return savedReview;
     }
 
 
+   /* private static Recommendation updateContractorRating(UUID id){
+        List<Recommendation> reviews = recommendationRepository.
 
 
-    public List<Recommendation> updateAverageRatingForContractor(UUID contractorId) {
-        List<Recommendation> reviews = recommendationRepository.findContractorRecommendationsByContractor_Id(contractorId);
-
-        // Calculate average rating
-        double averageRating = reviews.stream()
+        // Update the contractor's review list and recalculate average rating
+        contractor.getReview().add(savedReview);
+        double averageRating = contractor.getReview().stream()
                 .mapToInt(Recommendation::getRating)
                 .average()
                 .orElse(0.0);
+        contractor.setAverageRating((float) averageRating);
+        contractorRepository.save(contractor);
+    }*/
 
-        // Retrieve the contractor and update the rating
-        contractorRepository.findById(contractorId).ifPresent(contractor -> {
-            contractor.setAverageRating((float) averageRating);
-            contractorRepository.save(contractor);
-        });
 
-        return reviews;
+    private void updateAverageRatingForContractor(Contractor contractor) {
+        // Retrieve all reviews for the contractor
+        List<Recommendation> reviews = findRecommendationsByContractor(contractor);
+
+        // Calculate the average rating or set to 0 if no reviews are present
+        double averageRating = reviews.isEmpty() ? 0.0 :
+                reviews.stream().mapToInt(Recommendation::getRating).average().orElse(0.0);
+
+        // Update the contractor's average rating directly
+        contractor.setAverageRating((float) averageRating);
+        contractorRepository.save(contractor);
     }
 
 
-    public List<Recommendation> getReviewsForContractor(UUID contractorId) {
-        return recommendationRepository.findContractorRecommendationsByContractor_Id(contractorId);
+
+    @Override
+    public List<Recommendation> findRecommendationsByContractor(Contractor contractor) {
+        return recommendationRepository.findRecommendationsByContractor(contractor);
     }
 }

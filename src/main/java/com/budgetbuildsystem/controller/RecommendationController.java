@@ -1,6 +1,5 @@
 package com.budgetbuildsystem.controller;
 
-import com.budgetbuildsystem.model.Citizen;
 import com.budgetbuildsystem.model.Contractor;
 import com.budgetbuildsystem.model.Recommendation;
 import com.budgetbuildsystem.service.citizen.ICitizenService;
@@ -49,10 +48,8 @@ public class RecommendationController {
     @PutMapping("/review/{contractorId}")
     public ResponseEntity<?> rateAndComment(
             @PathVariable UUID contractorId,
-            @RequestBody Recommendation recommendation
-    ) {
+            @RequestBody Recommendation recommendation) {
         try {
-            // Validate input fields
             if (recommendation.getReviews() == null || recommendation.getReviews().isEmpty()) {
                 return ResponseEntity.badRequest().body("At least one review comment is required.");
             }
@@ -63,29 +60,21 @@ public class RecommendationController {
                 return ResponseEntity.badRequest().body("Citizen ID is required.");
             }
 
-            // Fetch Citizen
-            UUID citizenId = recommendation.getCitizen().getId();
-            Optional<Citizen> citizenOptional = citizenService.getCitizenById(citizenId);
-            if (citizenOptional.isEmpty()) {
-                return ResponseEntity.badRequest().body("Citizen not found.");
-            }
-
-            // Perform rating and commenting
             Recommendation review = recommendationService.rateAndComment(
                     contractorId,
                     recommendation.getReviews(),
                     recommendation.getRating(),
-                    citizenId
-            );
+                    recommendation.getCitizen().getId());
+
             return ResponseEntity.status(HttpStatus.CREATED).body(review);
         } catch (Exception ex) {
             log.error("Error occurred while rating contractor with ID {}: {}", contractorId, ex.getMessage(), ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred while processing your request.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing your request.");
         }
     }
 
-    @GetMapping("/{contractorId}/reviews")
+
+   /* @GetMapping("/{contractorId}/reviews")
     public ResponseEntity<?> getReviewsForContractor(@PathVariable UUID contractorId) {
         try {
             List<Recommendation> reviews = recommendationService.getReviewsForContractor(contractorId);
@@ -97,9 +86,9 @@ public class RecommendationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred while retrieving reviews.");
         }
-    }
+    }*/
 
-    @GetMapping("/{contractorId}/average-rating")
+   /* @GetMapping("/{contractorId}/average-rating")
     public ResponseEntity<?> getAverageRating(@PathVariable UUID contractorId) {
         try {
            List<Recommendation> averageRating=  recommendationService.updateAverageRatingForContractor(contractorId);
@@ -109,5 +98,5 @@ public class RecommendationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred while calculating the average rating.");
         }
-    }
+    }*/
 }
