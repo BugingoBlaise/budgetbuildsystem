@@ -5,6 +5,7 @@ import com.budgetbuildsystem.dto.AuthResponse;
 import com.budgetbuildsystem.dto.LoginRequest;
 import com.budgetbuildsystem.dto.SignDto;
 import com.budgetbuildsystem.service.authentication.AuthenticationService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,9 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        return ResponseEntity.ok("Logged out successfully");
+    }
 
 }

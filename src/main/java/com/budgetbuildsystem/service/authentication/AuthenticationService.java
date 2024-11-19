@@ -6,6 +6,7 @@ import com.budgetbuildsystem.dto.SignDto;
 import com.budgetbuildsystem.model.*;
 import com.budgetbuildsystem.repository.*;
 import com.budgetbuildsystem.util.JwtService;
+import jakarta.persistence.EntityExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,11 +42,16 @@ public class AuthenticationService {
 
         User user = new User();
 
+        Optional<User>checkUsername=userRepository.findByUsername(signDto.getUsername());
+        if(checkUsername.isPresent()){
+            throw new EntityExistsException("Username already exists");
+        }
         user.setUsername(signDto.getUsername());
         user.setPassword(passwordEncoder.encode(signDto.getPassword()));
         Set<String> roles = new HashSet<>();
         roles.add("ROLE_" + signDto.getUserType().toString().toUpperCase());
         user.setRoles(roles);
+
         user = userRepository.save(user);
 
         switch (signDto.getUserType().toString().toUpperCase()) {
@@ -56,6 +62,7 @@ public class AuthenticationService {
                 citizen.setEmail(signDto.getEmail());
                 citizen.setPhoneNumber(signDto.getPhoneNumber());
                 citizen.setAddress(signDto.getAddress());
+
                 citizen.setUser(user);
                 citizenRepository.save(citizen);
                 break;
