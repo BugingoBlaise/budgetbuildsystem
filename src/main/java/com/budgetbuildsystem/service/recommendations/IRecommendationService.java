@@ -16,6 +16,8 @@ public interface IRecommendationService {
                                    int rating,
                                    UUID citizenId) ;
 
+    List<Recommendation> getReviewsForContractor(UUID contractorId);
 
     List<Recommendation>findRecommendationsByContractor(Contractor contractor);
+    List<Recommendation>findRecommendationByContractorId(UUID contractorId);
 }

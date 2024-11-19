@@ -12,10 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -52,28 +49,18 @@ public class IRecommendationServiceImpl implements IRecommendationService {
         newReview.setCitizen(citizen);
         newReview.setContractor(contractor);
         newReview.setDate(new Date());
-        newReview.setLikeCount(1);  // Set initial like count
+        newReview.setLikeCount(newReview.getLikeCount() + 1);  // Set initial like count
         newReview.setReviews(reviews);
         Recommendation savedReview = recommendationRepository.save(newReview);
         updateAverageRatingForContractor(contractor);
         return savedReview;
     }
 
-
-   /* private static Recommendation updateContractorRating(UUID id){
-        List<Recommendation> reviews = recommendationRepository.
-
-
-        // Update the contractor's review list and recalculate average rating
-        contractor.getReview().add(savedReview);
-        double averageRating = contractor.getReview().stream()
-                .mapToInt(Recommendation::getRating)
-                .average()
-                .orElse(0.0);
-        contractor.setAverageRating((float) averageRating);
-        contractorRepository.save(contractor);
-    }*/
-
+    public List<Recommendation> getReviewsForContractor(UUID contractorId) {
+        Contractor contractor = contractorRepository.findById(contractorId)
+                .orElseThrow(() -> new EntityNotFoundException("Contractor not found with ID: " + contractorId));
+        return findRecommendationsByContractor(contractor);
+    }
 
     private void updateAverageRatingForContractor(Contractor contractor) {
         // Retrieve all reviews for the contractor
@@ -85,13 +72,24 @@ public class IRecommendationServiceImpl implements IRecommendationService {
 
         // Update the contractor's average rating directly
         contractor.setAverageRating((float) averageRating);
+
+        // Save the updated contractor
         contractorRepository.save(contractor);
     }
-
 
 
     @Override
     public List<Recommendation> findRecommendationsByContractor(Contractor contractor) {
         return recommendationRepository.findRecommendationsByContractor(contractor);
+    }
+
+    @Override
+    public List<Recommendation> findRecommendationByContractorId(UUID id) {
+        List<Recommendation> recommendationList = recommendationRepository.findRecommendationsByContractorId(id);
+        if (recommendationList.isEmpty()) {
+            throw new EntityNotFoundException("No recommendations found for contractor with ID { } " + id);
+        } else {
+            return recommendationList;
+        }
     }
 }

@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface IRecommendationsRepo extends JpaRepository<Recommendation, UUID> {
+    @Query("SELECT r FROM Recommendation r WHERE r.contractor.id = :id")
+    List<Recommendation> findRecommendationsByContractorId(@Param("id") UUID id);
     @Query("SELECT r FROM Recommendation r WHERE r.contractor = :contractor")
     List<Recommendation> findRecommendationsByContractor(@Param("contractor") Contractor contractor);
 }

@@ -7,10 +7,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface IContractorRepository extends JpaRepository<Contractor, UUID> {
-
      Optional<Contractor> findByCompanyName(String companyName);
      Optional<Contractor> findContractorByEmailAndUsername(String email,String username);
-
-//     @Query("SELECT AVG(r.rating) FROM Recommendation r WHERE r.contractor.id = :contractorId")
-//     Double findAverageRatingByContractorId(@Param("contractorId") UUID contractorId);
+/*
+     @Query("SELECT AVG(r.rating) FROM Recommendation r WHERE r.contractor.id = :contractorId")
+     Double findAverageRatingByContractorId(@Param("contractorId") UUID contractorId);*/
 }

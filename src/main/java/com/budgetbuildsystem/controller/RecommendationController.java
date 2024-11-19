@@ -18,7 +18,7 @@ import java.util.UUID;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/contractors")
+@RequestMapping("/api/reviews")
 public class RecommendationController {
     private final IRecommendationService recommendationService;
     private final ICitizenService citizenService;
@@ -31,10 +31,8 @@ public class RecommendationController {
 
     @GetMapping("/{contractorId}")
     public ResponseEntity<?> getContractorById(@PathVariable UUID contractorId) {
-
         try {
             Optional<Contractor> contractor = contractorService.getContractorById(contractorId);
-
             return contractor.isEmpty() ?
                     ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Contractor  found for ID {}" + contractorId) :
                     ResponseEntity.ok(contractor);
@@ -74,7 +72,7 @@ public class RecommendationController {
     }
 
 
-   /* @GetMapping("/{contractorId}/reviews")
+    @GetMapping("/findByContractorId/{contractorId}")
     public ResponseEntity<?> getReviewsForContractor(@PathVariable UUID contractorId) {
         try {
             List<Recommendation> reviews = recommendationService.getReviewsForContractor(contractorId);
@@ -86,7 +84,7 @@ public class RecommendationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred while retrieving reviews.");
         }
-    }*/
+    }
 
    /* @GetMapping("/{contractorId}/average-rating")
     public ResponseEntity<?> getAverageRating(@PathVariable UUID contractorId) {

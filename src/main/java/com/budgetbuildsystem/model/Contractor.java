@@ -29,6 +29,7 @@ public class Contractor {
     private String profilePic;
     @OneToMany(mappedBy = "contractor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Recommendation> review = new HashSet<>();
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     @JsonIgnore

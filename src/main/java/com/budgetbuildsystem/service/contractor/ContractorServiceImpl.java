@@ -3,8 +3,8 @@ package com.budgetbuildsystem.service.contractor;
 import com.budgetbuildsystem.model.Contractor;
 import com.budgetbuildsystem.repository.IContractorRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,11 +13,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Transactional
+@RequiredArgsConstructor
 @Service
 @Slf4j
 public class ContractorServiceImpl implements IContractorService {
-    @Autowired
-    IContractorRepository repo;
+
+    private final IContractorRepository repo;
 
     @Override
     public void saveContractor(Contractor contractor) {
@@ -55,6 +56,6 @@ public class ContractorServiceImpl implements IContractorService {
 
     @Override
     public Optional<Contractor> getContractorById(UUID uuid) {
-        return Optional.ofNullable(repo.findById(uuid).orElseThrow(()->new EntityNotFoundException("Contractor of ID : {}"+uuid+ "NOT FOUND")));
+        return Optional.ofNullable(repo.findById(uuid).orElseThrow(() -> new EntityNotFoundException("Contractor of ID : {}" + uuid + "NOT FOUND")));
     }
 }
