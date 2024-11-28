@@ -48,7 +48,7 @@ public class InitialRunnerApp implements CommandLineRunner {
             user.setPassword(passwordEncoder.encode(request.getPassword())); // Encode password for User
 
             Set<String> roles = new HashSet<>();
-            roles.add("ROLE_" + request.getUserType().toString().toUpperCase());
+            roles.add(String.valueOf(AccountType.ADMIN));
             user.setRoles(roles);
 
             // Create and setup Administrator entity

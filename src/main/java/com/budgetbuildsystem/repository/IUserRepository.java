@@ -1,5 +1,6 @@
 package com.budgetbuildsystem.repository;
 
+import com.budgetbuildsystem.model.Supplier;
 import com.budgetbuildsystem.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

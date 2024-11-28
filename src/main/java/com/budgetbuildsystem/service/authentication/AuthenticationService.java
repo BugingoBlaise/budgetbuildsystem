@@ -19,7 +19,9 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-@Service@Transactional@Slf4j
+@Service
+@Transactional
+@Slf4j
 public class AuthenticationService {
     @Autowired
     ICitizenRepository citizenRepository;
@@ -42,14 +44,14 @@ public class AuthenticationService {
 
         User user = new User();
 
-        Optional<User>checkUsername=userRepository.findByUsername(signDto.getUsername());
-        if(checkUsername.isPresent()){
+        Optional<User> checkUsername = userRepository.findByUsername(signDto.getUsername());
+        if (checkUsername.isPresent()) {
             throw new EntityExistsException("Username already exists");
         }
         user.setUsername(signDto.getUsername());
         user.setPassword(passwordEncoder.encode(signDto.getPassword()));
         Set<String> roles = new HashSet<>();
-        roles.add("ROLE_" + signDto.getUserType().toString().toUpperCase());
+        roles.add(signDto.getUserType().toString().toUpperCase());
         user.setRoles(roles);
 
         user = userRepository.save(user);
@@ -90,12 +92,28 @@ public class AuthenticationService {
             default:
                 throw new IllegalArgumentException("Invalid user type.");
         }
-
         String token = jwtService.generateToken(user);
-        return new AuthResponse(user.getUsername(), user.getRoles().toString(),token);
+        return new AuthResponse(user.getUsername(), user.getRoles().toString(), token);
 
     }
 
+
+    public AuthResponse authenticate(LoginRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(),
+                        request.getPassword()
+                )
+        );
+        User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+        String username = user.getUsername();
+
+        String role = user.getRoles().toString();
+
+        String token = jwtService.generateToken(user);
+
+        return new AuthResponse(username, role, token);
+    }
 
     private static Contractor getContractor(SignDto signDto, User user) {
         Contractor contractor = new Contractor();
@@ -104,7 +122,7 @@ public class AuthenticationService {
         contractor.setPhoneNumber(signDto.getPhoneNumber());
         contractor.setUsername(signDto.getUsername());
         contractor.setContactDetails(signDto.getContactDetails());
-        log.info("LICENCE NUMBER IS {}",signDto.getLicenseNumber());
+        log.info("LICENCE NUMBER IS {}", signDto.getLicenseNumber());
         contractor.setLicenseNumber(signDto.getLicenseNumber());
         contractor.setAddress(signDto.getAddress());
         contractor.setProfilePic(signDto.getProfilePic());
@@ -124,23 +142,4 @@ public class AuthenticationService {
         supplier.setUser(user);
         return supplier;
     }
-
-    public AuthResponse authenticate(LoginRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-        );
-        User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
-        String username = user.getUsername();
-        String role = user.getRoles().toString();
-        // Generate token for the authenticated user and return it in the response.
-        String token = jwtService.generateToken(user);
-
-        return new AuthResponse( username,role,token);
-
-    }
-
-
 }

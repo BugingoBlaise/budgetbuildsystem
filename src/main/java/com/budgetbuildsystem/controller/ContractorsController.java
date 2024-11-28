@@ -16,10 +16,10 @@ import java.util.UUID;
 public class ContractorsController {
     private final IContractorService contractorsService;
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<?> getAllContractors() {
         try {
-            return ResponseEntity.status(HttpStatus.FOUND).body(contractorsService.findAllContractors());
+            return ResponseEntity.status(HttpStatus.OK).body(contractorsService.findAllContractors());
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }

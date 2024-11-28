@@ -1,10 +1,12 @@
 package com.budgetbuildsystem.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class AuthResponse {
     private String username;
     private String role;

@@ -42,13 +42,10 @@ public class MaterialServiceImpl implements IMaterialService {
     }
 
     @Override
-    public Materials addMaterial(Materials materials) {
-        try{
-            return   repository.save(materials);
-        }catch (Exception e){
-            throw new RuntimeException("Error while saving material: " + e.getMessage());
+    public Materials addMaterial(Materials material) {
+        if (material.getSupplier() == null) {
+            throw new IllegalArgumentException("Supplier must be set for the material");
         }
-
-
+        return repository.save(material);
     }
 }

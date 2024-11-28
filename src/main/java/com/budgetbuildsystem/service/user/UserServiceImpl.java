@@ -33,7 +33,7 @@ public class UserServiceImpl implements IUserService {
         user.setUsername(signDto.getUsername());
         user.setPassword(signDto.getPassword());
         Set<String> roles = new HashSet<>();
-        roles.add("ROLE_" + signDto.getUserType().toString().toUpperCase());
+        roles.add(signDto.getUserType().toString().toUpperCase());
         user.setRoles(roles);
         user = userRepository.save(user);
 
@@ -99,16 +99,16 @@ public class UserServiceImpl implements IUserService {
             Optional<User> user = userRepository.findById(id);
             if (user.isPresent()) {
                 switch (user.get().getRoles().iterator().next().toUpperCase()) {
-                    case "ROLE_CITIZEN":
+                    case "CITIZEN":
                         citizenRepository.deleteById(id);
                         break;
-                    case "ROLE_ADMIN":
+                    case "ADMIN":
                         iAdminRepository.deleteById(id);
                         break;
-                    case "ROLE_SUPPLIER":
+                    case "SUPPLIER":
                         supplierRepository.deleteById(id);
                         break;
-                    case "ROLE_CONTRACTOR":
+                    case "CONTRACTOR":
                         contractorRepository.deleteById(id);
                         break;
                 }
