@@ -1,6 +1,5 @@
 package com.budgetbuildsystem.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +24,6 @@ public class Materials {
     private Date postedDate;
     @ManyToOne
     @JoinColumn(name = "supplier_id")
-//    @JsonBackReference
     private Supplier supplier;
-    @JsonProperty("supplierDetails")
-    public Object getSupplierDetails() {
-        if (supplier != null) return supplier;
-        return null;
-    }
+
 }

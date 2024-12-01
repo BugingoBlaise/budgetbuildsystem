@@ -12,5 +12,5 @@ public interface IMaterialService {
     Optional<Materials> findMaterialById(UUID materialId);
     Materials updateMaterial(Materials material);
      Materials addMaterial(Materials materials);
-
+    List<Materials> getMaterialsBySupplierId(UUID supplierId);
 }

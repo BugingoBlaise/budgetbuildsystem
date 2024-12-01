@@ -1,7 +1,6 @@
 package com.budgetbuildsystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +23,11 @@ public class Supplier {
     private String email;
     private String phoneNumber;
     private String username;
+    @JsonIgnore
     private String password;
     private int tinNumber;
-    @OneToMany(mappedBy = "supplier")
-    @JsonManagedReference // This manages the back reference
+    @OneToMany(mappedBy = "supplier",cascade = CascadeType.ALL, orphanRemoval = true )
+    @JsonIgnore
     private List<Materials> materials;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")

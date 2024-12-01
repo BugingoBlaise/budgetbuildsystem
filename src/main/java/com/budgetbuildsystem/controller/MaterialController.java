@@ -13,7 +13,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,51 +40,59 @@ public class MaterialController {
     private IUserRepository userRepository;
 
 
-    @GetMapping("/all")
-    public List<Materials>findAllMaterials(){
-        return
-            materialService.findAllMaterials();
-    }
-    @GetMapping
-    public List<Materials> getAllMaterials() {
-        return materialService.findAllMaterials();
+    @GetMapping("/public")
+    public ResponseEntity<List<Materials>> getAllPublicMaterials() {
+        List<Materials> allMaterials = materialService.findAllMaterials();
+        return ResponseEntity.ok(allMaterials);
     }
 
-    @PostMapping("/saveMaterial")
+
+   /* @PostMapping("/saveMaterial")
     public ResponseEntity<?> addMaterial(
             @RequestParam("materialName") String materialName,
             @RequestParam("materialDetails") String materialDetails,
             @RequestParam("price") float price,
-            @RequestParam(value = "imagePath", required = true) MultipartFile imagePath,
-            Authentication authentication) {
-
+            @RequestParam(value = "imagePath", required = true) MultipartFile imagePath
+             ) {
         try {
-            // Get current user from JWT authentication
-            User user = userRepository.findByUsername(authentication.getName())
-                    .orElseThrow(() -> new IllegalStateException("User not found"));
-
-            // Check if user is a supplier
-            if (!user.getRoles().contains("SUPPLIER")) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body("Only suppliers can add materials");
-            }
-
-            // Get supplier profile
-            Supplier currentSupplier = supplierRepository.findByUser(user)
-                    .orElseThrow(() -> new IllegalStateException("Supplier profile not found"));
 
             Materials newMaterial = new Materials();
             newMaterial.setMaterialName(materialName);
             newMaterial.setMaterialDetails(materialDetails);
             newMaterial.setPrice(price);
             newMaterial.setPostedDate(new Date());
-            newMaterial.setSupplier(currentSupplier);
+
+
 
             // Handle image upload
             if (imagePath != null && !imagePath.isEmpty()) {
                 String fileName = fileService.storeFile(imagePath);
                 newMaterial.setImagePath(fileName);
             }
+
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (!(authentication instanceof AnonymousAuthenticationToken)) {
+                String currentUserName = authentication.getName();
+
+
+                // Get current user from JWT authentication
+                User user = userRepository.findByUsername(currentUserName)
+                        .orElseThrow(() -> new IllegalStateException("User not found"));
+
+                // Check if user is a supplier
+                if (!user.getRoles().contains("SUPPLIER")) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body("Only suppliers can add materials");
+                }
+                // Get supplier profile
+                Supplier currentSupplier = supplierRepository.findByUser(user)
+                        .orElseThrow(() -> new IllegalStateException("Supplier profile not found"));
+                newMaterial.setSupplier(currentSupplier);
+            }
+
+
+
 
             Materials savedMaterial = materialService.addMaterial(newMaterial);
             return ResponseEntity.ok(savedMaterial);
@@ -95,7 +106,72 @@ public class MaterialController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error saving material: " + e.getMessage());
         }
+    }*/
+
+    @PostMapping("/saveMaterial")
+    public ResponseEntity<?> addMaterial(
+            @RequestParam("materialName") String materialName,
+            @RequestParam("materialDetails") String materialDetails,
+            @RequestParam("price") float price,
+            @RequestParam(value = "imagePath", required = true) MultipartFile imagePath
+    ) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication instanceof AnonymousAuthenticationToken) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Authentication required to add materials");
+            }
+
+            // Get current user from JWT authentication
+            String currentUserName = authentication.getName();
+            User user = userRepository.findByUsername(currentUserName)
+                    .orElseThrow(() -> new IllegalStateException("User not found"));
+
+            if (!user.getRoles().contains("SUPPLIER")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body("Only suppliers can add materials");
+            }
+
+            // Ensure user is a supplier
+            Supplier currentSupplier = supplierRepository.findByUser(user)
+                    .orElseThrow(() -> new IllegalStateException("Supplier profile not found for this user"));
+
+            // Create and populate the material
+            Materials newMaterial = new Materials();
+            newMaterial.setMaterialName(materialName);
+            newMaterial.setMaterialDetails(materialDetails);
+            newMaterial.setPrice(price);
+            newMaterial.setPostedDate(new Date());
+
+            // Crucially, set the supplier
+            newMaterial.setSupplier(currentSupplier);
+
+            // Handle image upload
+            if (imagePath != null && !imagePath.isEmpty()) {
+                String fileName = fileService.storeFile(imagePath);
+                newMaterial.setImagePath(fileName);
+            }
+
+            // Save the material
+            Materials savedMaterial = materialService.addMaterial(newMaterial);
+            return ResponseEntity.ok(savedMaterial);
+
+        } catch (IllegalStateException e) {
+            log.error("Authentication or supplier profile error", e);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(e.getMessage());
+        } catch (IOException e) {
+            log.error("Failed to upload file", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Could not upload file: " + e.getMessage());
+        } catch (Exception e) {
+            log.error("Failed to save material", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error saving material: " + e.getMessage());
+        }
     }
+
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteMaterial(@PathVariable UUID id) {
@@ -172,5 +248,31 @@ public class MaterialController {
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG) // or the appropriate media type
                 .body(file);
+    }
+
+
+
+    @PreAuthorize("hasAuthority('SUPPLIER')")
+    @GetMapping("/my-materials")
+    public ResponseEntity<List<Materials>> getSupplierMaterials() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        String currentUserName = authentication.getName();
+        User user = userRepository.findByUsername(currentUserName)
+                .orElseThrow(() -> new IllegalStateException("User not found"));
+
+
+        if (!user.getRoles().contains("SUPPLIER")) {
+           throw new IllegalStateException("USER NOT SUPPLIER EXCEPTION");
+        }
+
+        Supplier currentSupplier = supplierRepository.findByUser(user)
+                .orElseThrow(() -> new IllegalStateException("Supplier profile not found"));
+
+        List<Materials> supplierMaterials = materialService.getMaterialsBySupplierId(currentSupplier.getId());
+        return ResponseEntity.ok(supplierMaterials);
     }
 }

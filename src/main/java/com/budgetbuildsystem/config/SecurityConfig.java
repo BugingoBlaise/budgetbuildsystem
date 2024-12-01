@@ -58,7 +58,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/loans/**").permitAll()
                         .requestMatchers("/api/materials/**").permitAll()                     .requestMatchers("/api/materials/image/").permitAll()
                         .requestMatchers("/api/users/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/users/me").permitAll()
+//                        .requestMatchers("/api/users/me").permitAll()
                         .anyRequest()
                         .authenticated()
                 )

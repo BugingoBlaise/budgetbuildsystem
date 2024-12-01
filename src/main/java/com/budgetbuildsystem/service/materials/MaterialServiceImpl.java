@@ -48,4 +48,10 @@ public class MaterialServiceImpl implements IMaterialService {
         }
         return repository.save(material);
     }
+
+    @Override
+    public List<Materials> getMaterialsBySupplierId(UUID supplierId) {
+        Optional<List<Materials>> materials = repository.findMaterialsBySupplierId(supplierId);
+        return materials.orElseThrow(() -> new RuntimeException("No materials found for supplier ID: " + supplierId));
+    }
 }

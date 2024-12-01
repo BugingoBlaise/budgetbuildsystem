@@ -105,6 +105,11 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
+
+       /* User userDetails = userRepository.findByUsername(authentication.getName()).orElseThrow();
+        String usernames = userDetails.getUsername();
+        log.info("USERNAME IS: ---- {}", usernames);*/
+
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
         String username = user.getUsername();
 
