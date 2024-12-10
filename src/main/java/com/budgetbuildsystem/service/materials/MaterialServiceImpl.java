@@ -52,6 +52,15 @@ public class MaterialServiceImpl implements IMaterialService {
     @Override
     public List<Materials> getMaterialsBySupplierId(UUID supplierId) {
         Optional<List<Materials>> materials = repository.findMaterialsBySupplierId(supplierId);
-        return materials.orElseThrow(() -> new RuntimeException("No materials found for supplier ID: " + supplierId));
+        return materials.orElseThrow(() -> new EntityNotFoundException("No materials found for supplier ID: " + supplierId));
+    }
+
+    @Override
+    public List<Materials> searchMaterialByName(String materialName) {
+        if (materialName == null || materialName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Material name cannot be empty");
+        }
+        Optional<List<Materials>> materials = repository.findMaterialsByMaterialName(materialName.trim());
+        return materials.orElseThrow(()->new EntityNotFoundException("Material not found"));
     }
 }

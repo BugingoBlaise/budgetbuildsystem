@@ -172,7 +172,6 @@ public class MaterialController {
     }
 
 
-
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteMaterial(@PathVariable UUID id) {
         try {
@@ -250,8 +249,6 @@ public class MaterialController {
                 .body(file);
     }
 
-
-
     @PreAuthorize("hasAuthority('SUPPLIER')")
     @GetMapping("/my-materials")
     public ResponseEntity<List<Materials>> getSupplierMaterials() {
@@ -264,9 +261,8 @@ public class MaterialController {
         User user = userRepository.findByUsername(currentUserName)
                 .orElseThrow(() -> new IllegalStateException("User not found"));
 
-
         if (!user.getRoles().contains("SUPPLIER")) {
-           throw new IllegalStateException("USER NOT SUPPLIER EXCEPTION");
+            throw new IllegalStateException("USER NOT SUPPLIER EXCEPTION");
         }
 
         Supplier currentSupplier = supplierRepository.findByUser(user)
@@ -275,4 +271,12 @@ public class MaterialController {
         List<Materials> supplierMaterials = materialService.getMaterialsBySupplierId(currentSupplier.getId());
         return ResponseEntity.ok(supplierMaterials);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Materials>> searchMaterial(@RequestParam("materialName") String materialName) {
+        log.info("Searching for materials with name: {}", materialName);
+        List<Materials> searchedMaterial = materialService.searchMaterialByName(materialName);
+        return ResponseEntity.ok(searchedMaterial);
+    }
+
 }

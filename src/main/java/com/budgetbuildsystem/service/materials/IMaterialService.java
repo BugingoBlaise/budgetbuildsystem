@@ -13,4 +13,6 @@ public interface IMaterialService {
     Materials updateMaterial(Materials material);
      Materials addMaterial(Materials materials);
     List<Materials> getMaterialsBySupplierId(UUID supplierId);
+
+    List<Materials>searchMaterialByName(String materialName);
 }

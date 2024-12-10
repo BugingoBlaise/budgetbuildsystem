@@ -55,7 +55,9 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser() {
         try {
+
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
             if (authentication instanceof AnonymousAuthenticationToken) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body("Authentication required to add materials");
@@ -66,19 +68,20 @@ public class AuthController {
             User user = userRepository.findByUsername(currentUserName)
                     .orElseThrow(() -> new IllegalStateException("User not found"));
 
-            if (!user.getRoles().contains("SUPPLIER")) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body("Only suppliers can add materials");
-            }
+//            if (!user.getRoles().contains("SUPPLIER")) {
+//                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+//                        .body("Only suppliers can add materials");
+//            }
+
             // Ensure user is a supplier
 //            Supplier currentSupplier = supplierRepository.findByUser(user)
 //                    .orElseThrow(() -> new IllegalStateException("Supplier profile not found for this user"));
 
-          return  ResponseEntity.ok(user);
+            return ResponseEntity.ok(user);
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error fetching user details");
         }
-     }
+    }
 }
