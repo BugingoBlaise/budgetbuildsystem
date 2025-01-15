@@ -68,14 +68,16 @@ public class AuthController {
             User user = userRepository.findByUsername(currentUserName)
                     .orElseThrow(() -> new IllegalStateException("User not found"));
 
-//            if (!user.getRoles().contains("SUPPLIER")) {
-//                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-//                        .body("Only suppliers can add materials");
-//            }
+/*            if (!user.getRoles().contains("SUPPLIER")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body("Only suppliers can add materials");
+            }*/
 
             // Ensure user is a supplier
-//            Supplier currentSupplier = supplierRepository.findByUser(user)
-//                    .orElseThrow(() -> new IllegalStateException("Supplier profile not found for this user"));
+/*
+            Supplier currentSupplier = supplierRepository.findByUser(user)
+                    .orElseThrow(() -> new IllegalStateException("Supplier profile not found for this user"));
+*/
 
             return ResponseEntity.ok(user);
 

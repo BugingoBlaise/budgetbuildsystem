@@ -1,6 +1,7 @@
 package com.budgetbuildsystem.service.loan;
 
 import com.budgetbuildsystem.model.Loan;
+import com.budgetbuildsystem.model.Materials;
 import com.budgetbuildsystem.repository.ILoanRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -39,5 +40,14 @@ public class LoanServiceImpl implements ILoanService {
         if (id != null) {
         repository.deleteById(id);
         }
+    }
+
+    @Override
+    public List<Loan> searchLoanByName(String loanName) {
+        if (loanName == null || loanName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Material name cannot be empty");
+        }
+        Optional<List<Loan>> materials = repository.findLoanByName(loanName.trim());
+        return materials.orElseThrow(()->new EntityNotFoundException("Material not found"));
     }
 }

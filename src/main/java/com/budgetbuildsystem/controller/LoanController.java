@@ -52,7 +52,7 @@ public class LoanController {
     }
 
     @PutMapping("/updateLoan/{id}")
-    public ResponseEntity<?> updateLoan(@PathVariable UUID id, @RequestParam("LoanName") String LoanName, @RequestParam("description") String description, @RequestParam("interestRate") double interestRate, @RequestParam("link") String link, @RequestParam(value = "loanImage", required = false) MultipartFile loanImage) {
+    public ResponseEntity<?> updateLoan(@PathVariable UUID id, @RequestParam("LoanName") String LoanName, @RequestParam("description") String description, @RequestParam("interestRate") double interestRate, @RequestParam("link") String link, @RequestParam(value = "imagePath", required = false) MultipartFile imagePath) {
         try {
             Optional<Loan> existingLoan = loanService.getLoanById(id);
             if (existingLoan.isPresent()) {
@@ -61,13 +61,13 @@ public class LoanController {
                 loanToUpdate.setDescription(description);
                 loanToUpdate.setInterestRate(interestRate);
                 loanToUpdate.setLink(link);
-                if (loanImage != null && !loanImage.isEmpty()) {
+                if (imagePath != null && !imagePath.isEmpty()) {
                     // Delete old file if it exists
                     if (loanToUpdate.getImagePath() != null) {
                         fileService.deleteFile(loanToUpdate.getImagePath());
                     }
                     // Store new file
-                    String fileName = fileService.storeFile(loanImage);
+                    String fileName = fileService.storeFile(imagePath);
                     loanToUpdate.setImagePath(fileName);
                 }
                 Loan updatedLoan = loanService.saveLoan(loanToUpdate);
@@ -105,5 +105,12 @@ public class LoanController {
         Resource file = fileService.loadFileAsResource(imageName);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG) // or the appropriate media type
                 .body(file);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Loan>> searchLoan(@RequestParam("loanName") String loanName) {
+        log.info("Searching for loans with name: {}", loanName);
+        List<Loan> searchedLoan = loanService.searchLoanByName(loanName);
+        return ResponseEntity.ok(searchedLoan);
     }
 }

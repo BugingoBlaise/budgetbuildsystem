@@ -14,4 +14,5 @@ public interface ILoanService {
     Loan saveLoan(Loan regulation);
 
     void deleteLoanById(UUID id);
+    public List<Loan> searchLoanByName(String loanName);
 }
