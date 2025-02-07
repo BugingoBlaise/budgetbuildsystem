@@ -22,13 +22,14 @@ public class Contractor {
     private String companyName;
     private String email;
     private String phoneNumber;
-    public  String username;
+    public String username;
     private String password;
     private String contactDetails;
     private String licenseNumber;
     private String address;
     private float averageRating;
     private String profilePic;
+
     @OneToMany(mappedBy = "contractor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Recommendation> review = new HashSet<>();
 
@@ -36,4 +37,4 @@ public class Contractor {
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
- }
+}

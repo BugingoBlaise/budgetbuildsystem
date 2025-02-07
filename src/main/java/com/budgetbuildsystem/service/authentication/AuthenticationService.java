@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -93,7 +94,7 @@ public class AuthenticationService {
                 throw new IllegalArgumentException("Invalid user type.");
         }
         String token = jwtService.generateToken(user);
-        return new AuthResponse(user.getUsername(), user.getRoles().toString(), token);
+        return new AuthResponse(user.getId(),user.getUsername(), user.getRoles().toString(), token);
 
     }
 
@@ -106,18 +107,18 @@ public class AuthenticationService {
                 )
         );
 
-       /* User userDetails = userRepository.findByUsername(authentication.getName()).orElseThrow();
-        String usernames = userDetails.getUsername();
-        log.info("USERNAME IS: ---- {}", usernames);*/
+
 
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+        UUID userId=user.getId();
+
         String username = user.getUsername();
 
         String role = user.getRoles().toString();
 
         String token = jwtService.generateToken(user);
 
-        return new AuthResponse(username, role, token);
+        return new AuthResponse(userId,username, role, token);
     }
 
     private static Contractor getContractor(SignDto signDto, User user) {

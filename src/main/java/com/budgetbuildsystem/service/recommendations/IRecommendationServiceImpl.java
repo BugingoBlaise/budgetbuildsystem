@@ -3,16 +3,21 @@ package com.budgetbuildsystem.service.recommendations;
 import com.budgetbuildsystem.model.Citizen;
 import com.budgetbuildsystem.model.Contractor;
 import com.budgetbuildsystem.model.Recommendation;
+import com.budgetbuildsystem.model.User;
 import com.budgetbuildsystem.repository.IContractorRepository;
 import com.budgetbuildsystem.repository.IRecommendationsRepo;
 import com.budgetbuildsystem.service.citizen.ICitizenService;
+import com.budgetbuildsystem.service.user.IUserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,6 +27,7 @@ public class IRecommendationServiceImpl implements IRecommendationService {
     private final IRecommendationsRepo recommendationRepository;
     private final IContractorRepository contractorRepository;
     private final ICitizenService citizenService;
+    private final IUserService userService;
 
     public List<Contractor> findAllContractors() {
         return contractorRepository.findAll();
@@ -40,7 +46,13 @@ public class IRecommendationServiceImpl implements IRecommendationService {
         // Fetch Contractor and Citizen, throw if not found
         Contractor contractor = contractorRepository.findById(contractorId)
                 .orElseThrow(() -> new EntityNotFoundException("Contractor not found with ID: " + contractorId));
-        Citizen citizen = citizenService.getCitizenById(citizenId)
+
+        Optional<User> userObj = userService.findById(citizenId);
+        if (userObj.isEmpty()) {
+            throw new EntityNotFoundException("User not found with ID: " + citizenId);
+        }
+
+        Citizen citizen = citizenService.findByUserId(userObj.get().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Citizen not found with ID: " + citizenId));
 
         // Create and save the new Recommendation

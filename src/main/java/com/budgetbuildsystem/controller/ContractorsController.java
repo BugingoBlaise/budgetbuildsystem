@@ -1,7 +1,6 @@
 package com.budgetbuildsystem.controller;
 
 import com.budgetbuildsystem.service.contractor.IContractorService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,11 +9,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
-@RequiredArgsConstructor
+
 @RestController
 @RequestMapping("/api/contractors")
 public class ContractorsController {
     private final IContractorService contractorsService;
+    public ContractorsController(IContractorService contractorsService) {
+        this.contractorsService = contractorsService;
+    }
 
     @GetMapping
     public ResponseEntity<?> getAllContractors() {

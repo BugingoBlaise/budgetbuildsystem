@@ -5,7 +5,6 @@ import com.budgetbuildsystem.model.Recommendation;
 import com.budgetbuildsystem.service.citizen.ICitizenService;
 import com.budgetbuildsystem.service.contractor.IContractorService;
 import com.budgetbuildsystem.service.recommendations.IRecommendationService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,19 +16,24 @@ import java.util.UUID;
 
 @RestController
 @Slf4j
-@RequiredArgsConstructor
 @RequestMapping("/api/reviews")
-public class RecommendationController {
+public class ReviewsController {
     private final IRecommendationService recommendationService;
     private final ICitizenService citizenService;
     private final IContractorService contractorService;
 
-    @GetMapping
+    public ReviewsController(IRecommendationService recommendationService, ICitizenService citizenService, IContractorService contractorService) {
+        this.recommendationService = recommendationService;
+        this.citizenService = citizenService;
+        this.contractorService = contractorService;
+    }
+
+    @GetMapping("/contractors")
     public ResponseEntity<List<Contractor>> listAllContractors() {
         return ResponseEntity.ok(contractorService.findAllContractors());
     }
 
-    @GetMapping("/{contractorId}")
+    @GetMapping("contractors/{contractorId}")
     public ResponseEntity<?> getContractorById(@PathVariable UUID contractorId) {
         try {
             Optional<Contractor> contractor = contractorService.getContractorById(contractorId);
@@ -46,7 +50,10 @@ public class RecommendationController {
     @PutMapping("/review/{contractorId}")
     public ResponseEntity<?> rateAndComment(
             @PathVariable UUID contractorId,
-            @RequestBody Recommendation recommendation) {
+            @RequestBody Recommendation recommendation,
+            @RequestParam("citizenId") String citizenId
+
+    ) {
         try {
             if (recommendation.getReviews() == null || recommendation.getReviews().isEmpty()) {
                 return ResponseEntity.badRequest().body("At least one review comment is required.");
@@ -54,15 +61,24 @@ public class RecommendationController {
             if (recommendation.getRating() <= 0) {
                 return ResponseEntity.badRequest().body("A valid rating is required.");
             }
-            if (recommendation.getCitizen() == null || recommendation.getCitizen().getId() == null) {
+            if (citizenId == null ) {
                 return ResponseEntity.badRequest().body("Citizen ID is required.");
             }
+
+            log.info("Rating and commenting contractor with ID {}", contractorId);
+            log.info("Rating: {}", recommendation.getRating());
+            log.info("Reviews: {}", recommendation.getReviews());
+            log.info("Citizen ID: {}", citizenId);
+
+
+            UUID citId = UUID.fromString(citizenId);
 
             Recommendation review = recommendationService.rateAndComment(
                     contractorId,
                     recommendation.getReviews(),
                     recommendation.getRating(),
-                    recommendation.getCitizen().getId());
+                    citId
+            );
 
             return ResponseEntity.status(HttpStatus.CREATED).body(review);
         } catch (Exception ex) {
@@ -70,7 +86,6 @@ public class RecommendationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing your request.");
         }
     }
-
 
     @GetMapping("/findByContractorId/{contractorId}")
     public ResponseEntity<?> getReviewsForContractor(@PathVariable UUID contractorId) {
@@ -86,15 +101,4 @@ public class RecommendationController {
         }
     }
 
-   /* @GetMapping("/{contractorId}/average-rating")
-    public ResponseEntity<?> getAverageRating(@PathVariable UUID contractorId) {
-        try {
-           List<Recommendation> averageRating=  recommendationService.updateAverageRatingForContractor(contractorId);
-            return ResponseEntity.status(HttpStatus.FOUND).body(averageRating);
-        } catch (Exception ex) {
-            log.error("Error calculating average rating for contractor {}: {}", contractorId, ex.getMessage(), ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred while calculating the average rating.");
-        }
-    }*/
 }

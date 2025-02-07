@@ -45,8 +45,6 @@ public class MaterialController {
         List<Materials> allMaterials = materialService.findAllMaterials();
         return ResponseEntity.ok(allMaterials);
     }
-
-
    /* @PostMapping("/saveMaterial")
     public ResponseEntity<?> addMaterial(
             @RequestParam("materialName") String materialName,

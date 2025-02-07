@@ -9,5 +9,7 @@ import java.util.UUID;
 public interface ICitizenService {
     Citizen saveCitizen(Citizen citizen);
     Optional<Citizen> getCitizenById(UUID id)  ;
+
+    Optional<Citizen>findByUserId(UUID id);
     Optional<Citizen> findCitizenByEmail(String email) throws EmailNotFound;
 }

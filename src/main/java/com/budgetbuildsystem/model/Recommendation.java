@@ -1,5 +1,6 @@
 package com.budgetbuildsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-
 @Table(name = "reviews_recommendation")
 public class Recommendation {
     @Id
@@ -24,11 +24,13 @@ public class Recommendation {
     private int rating;
     @ElementCollection
     @CollectionTable(name = "review_tags", joinColumns = @JoinColumn(name = "post_id"))
-    private List<String> reviews=new ArrayList<>();
+    private List<String> reviews = new ArrayList<>();
     private Date date;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "citizen_id")
     private Citizen citizen;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "contractor_id")
     private Contractor contractor;
