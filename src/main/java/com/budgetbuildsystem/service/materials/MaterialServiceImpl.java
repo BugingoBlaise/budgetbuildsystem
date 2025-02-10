@@ -63,4 +63,11 @@ public class MaterialServiceImpl implements IMaterialService {
         Optional<List<Materials>> materials = repository.findMaterialsByMaterialName(materialName.trim());
         return materials.orElseThrow(()->new EntityNotFoundException("Material not found"));
     }
+
+
+
+    @Override
+    public long getTotalMaterials() {
+        return repository.count();
+    }
 }

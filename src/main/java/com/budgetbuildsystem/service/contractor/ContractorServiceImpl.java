@@ -58,4 +58,14 @@ public class ContractorServiceImpl implements IContractorService {
     public Optional<Contractor> getContractorById(UUID uuid) {
         return Optional.ofNullable(repo.findById(uuid).orElseThrow(() -> new EntityNotFoundException("Contractor of ID : {}" + uuid + "NOT FOUND")));
     }
+
+    @Override
+    public double getAverageContractorRating() {
+        return repo.calculateAverageRating();
+    }
+
+    @Override
+    public long countContractors() {
+        return repo.count();
+    }
 }

@@ -15,4 +15,6 @@ public interface ILoanService {
 
     void deleteLoanById(UUID id);
     public List<Loan> searchLoanByName(String loanName);
+//    double getTotalLoanAmount();
+    long getTotalLoans();
 }

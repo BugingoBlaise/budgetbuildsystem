@@ -26,6 +26,7 @@ public interface IUserService {
 
     List<Supplier> loadSuppliers();
 
-  /* User saveContractor(Local_Contractor contractor);
-   User signUpSupplier(Supplier supplier);*/
+
+    long getTotalUsers();
+
 }

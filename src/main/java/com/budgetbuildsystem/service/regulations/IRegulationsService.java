@@ -14,4 +14,7 @@ public interface IRegulationsService {
     Regulations saveRegulation(Regulations regulation);
 
     void deleteRegulationById(UUID id);
+
+
+    long getTotalRegulations();
 }

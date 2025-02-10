@@ -156,4 +156,12 @@ public class UserServiceImpl implements IUserService {
         return supplierRepository.findAll();
     }
 
+
+
+
+    public long getTotalUsers() {
+        return userRepository.count();
+    }
+
+
 }

@@ -21,7 +21,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -37,6 +36,7 @@ public class SecurityConfig {
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
         configuration.setExposedHeaders(Arrays.asList("Authorization"));
+
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
@@ -53,10 +53,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/api/auth/login", "/api/auth/signup", "/api/auth/me").permitAll()
                                 .requestMatchers("/api/auth/logout").permitAll()
-                              /*  .requestMatchers("/api/contractors/**").permitAll()
-                                .requestMatchers("/api/regulations/**").permitAll()
-                                .requestMatchers("/api/loans/**").permitAll()
-                                .requestMatchers("/api/materials/**").permitAll()*/
+                                /*  .requestMatchers("/api/contractors/**").permitAll()
+                                  .requestMatchers("/api/regulations/**").permitAll()
+                                  .requestMatchers("/api/loans/**").permitAll()
+                                  .requestMatchers("/api/materials/**").permitAll()*/
                                 .requestMatchers("/api/loans/image/**").permitAll()
                                 .requestMatchers("/api/materials/image/**").permitAll()
                                 .requestMatchers("/api/regulations/image/**").permitAll()

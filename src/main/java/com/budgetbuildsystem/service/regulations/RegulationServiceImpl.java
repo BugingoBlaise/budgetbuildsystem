@@ -43,4 +43,11 @@ public class RegulationServiceImpl implements IRegulationsService {
         }
         repository.deleteById(id);
     }
+
+
+
+    @Override
+    public long getTotalRegulations() {
+        return repository.count();
+    }
 }

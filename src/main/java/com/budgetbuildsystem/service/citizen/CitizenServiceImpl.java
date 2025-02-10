@@ -2,7 +2,6 @@ package com.budgetbuildsystem.service.citizen;
 
 import com.budgetbuildsystem.exception.EmailNotFound;
 import com.budgetbuildsystem.model.Citizen;
-import com.budgetbuildsystem.model.User;
 import com.budgetbuildsystem.repository.ICitizenRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +59,11 @@ public class CitizenServiceImpl implements ICitizenService {
         } catch (Exception e) {
             throw new EmailNotFound("Email not found");
         }
+    }
+
+    @Override
+    public long getTotalCitizens() {
+        return citizenRepository.count();
     }
 
 }

@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface ISupplierService {
     void saveSupplier(Supplier supplier);
     Optional<Supplier> findSupplierByName(String name);
+
+    long getTotalSuppliers();
 }

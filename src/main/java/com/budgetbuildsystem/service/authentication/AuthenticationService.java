@@ -6,6 +6,7 @@ import com.budgetbuildsystem.dto.SignDto;
 import com.budgetbuildsystem.model.*;
 import com.budgetbuildsystem.repository.*;
 import com.budgetbuildsystem.util.JwtService;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,8 @@ public class AuthenticationService {
     private JwtService jwtService;
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private EmailService emailService;
 
     public AuthResponse register(SignDto signDto) {
 
@@ -55,7 +58,7 @@ public class AuthenticationService {
         roles.add(signDto.getUserType().toString().toUpperCase());
         user.setRoles(roles);
 
-        user = userRepository.save(user);
+
 
         switch (signDto.getUserType().toString().toUpperCase()) {
             case "CITIZEN":
@@ -68,16 +71,21 @@ public class AuthenticationService {
 
                 citizen.setUser(user);
                 citizenRepository.save(citizen);
+                sendEmail(signDto.getEmail(), signDto.getUsername(), signDto.getFirstName());
                 break;
             case "ADMIN":
                 Administrator admin = new Administrator();
                 admin.setUsername(signDto.getUsername());
                 admin.setUser(user);
                 iAdminRepository.save(admin);
+                sendEmail(signDto.getEmail(), signDto.getUsername(), signDto.getFirstName());
+
                 break;
             case "SUPPLIER":
                 Supplier supplier = getSupplier(signDto, user);
                 supplierRepository.save(supplier);
+                sendEmail(signDto.getEmail(), signDto.getUsername(), signDto.getFirstName());
+
                 break;
 
             case "CONTRACTOR":
@@ -88,16 +96,29 @@ public class AuthenticationService {
                 } else {
                     Contractor contractor = getContractor(signDto, user);
                     contractorRepository.save(contractor);
+                    sendEmail(signDto.getEmail(), signDto.getUsername(), signDto.getFirstName());
+
                     break;
                 }
             default:
                 throw new IllegalArgumentException("Invalid user type.");
         }
+        user = userRepository.save(user);
         String token = jwtService.generateToken(user);
         return new AuthResponse(user.getId(),user.getUsername(), user.getRoles().toString(), token);
 
     }
 
+
+    public void sendEmail(String email, String username, String firstName) {
+        try {
+            emailService.sendWelcomeEmail(email, username);
+        } catch (MessagingException e) {
+            // Log the error but don't prevent user registration
+            // Consider implementing a retry mechanism or queueing system
+            e.printStackTrace();
+        }
+    }
 
     public AuthResponse authenticate(LoginRequest request) {
         authenticationManager.authenticate(
@@ -128,7 +149,7 @@ public class AuthenticationService {
         contractor.setPhoneNumber(signDto.getPhoneNumber());
         contractor.setUsername(signDto.getUsername());
         contractor.setContactDetails(signDto.getContactDetails());
-        log.info("LICENCE NUMBER IS {}", signDto.getLicenseNumber());
+
         contractor.setLicenseNumber(signDto.getLicenseNumber());
         contractor.setAddress(signDto.getAddress());
         contractor.setProfilePic(signDto.getProfilePic());

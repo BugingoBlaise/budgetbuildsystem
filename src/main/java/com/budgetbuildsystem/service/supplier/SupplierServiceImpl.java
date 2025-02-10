@@ -30,4 +30,9 @@ public class SupplierServiceImpl implements ISupplierService {
     public Optional<Supplier> findSupplierByName(String name) {
         return Optional.ofNullable(supplierRepository.findBySupplierName(name).orElseThrow(() -> new UsernameNotFoundException("Supplier not found")));
     }
+
+    @Override
+    public long getTotalSuppliers() {
+        return supplierRepository.count();
+    }
 }

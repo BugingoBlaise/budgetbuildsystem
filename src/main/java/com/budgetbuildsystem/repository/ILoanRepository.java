@@ -14,4 +14,8 @@ public interface ILoanRepository extends JpaRepository<Loan, UUID> {
     @Query("SELECT l FROM Loan l WHERE LOWER(l.name) LIKE LOWER(CONCAT('%', :kw, '%'))")
     Optional<List<Loan>> findLoanByName(@Param("kw") String name);
 
+
+
+
+
 }

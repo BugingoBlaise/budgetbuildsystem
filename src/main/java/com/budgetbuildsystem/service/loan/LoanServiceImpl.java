@@ -1,7 +1,6 @@
 package com.budgetbuildsystem.service.loan;
 
 import com.budgetbuildsystem.model.Loan;
-import com.budgetbuildsystem.model.Materials;
 import com.budgetbuildsystem.repository.ILoanRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -50,4 +49,11 @@ public class LoanServiceImpl implements ILoanService {
         Optional<List<Loan>> materials = repository.findLoanByName(loanName.trim());
         return materials.orElseThrow(()->new EntityNotFoundException("Material not found"));
     }
+
+    @Override
+    public long getTotalLoans() {
+        return repository.count();
+    }
+
+
 }

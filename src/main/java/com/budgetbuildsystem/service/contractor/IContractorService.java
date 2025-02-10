@@ -16,6 +16,9 @@ public interface IContractorService {
     List<Contractor> findAllContractors();
     Optional<Contractor>getContractorById(UUID uuid);
 
+    double getAverageContractorRating();
+    long countContractors();
+
 
 }
 

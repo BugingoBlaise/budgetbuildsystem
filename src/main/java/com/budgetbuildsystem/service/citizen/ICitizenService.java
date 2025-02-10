@@ -12,4 +12,6 @@ public interface ICitizenService {
 
     Optional<Citizen>findByUserId(UUID id);
     Optional<Citizen> findCitizenByEmail(String email) throws EmailNotFound;
+
+    long getTotalCitizens();
 }

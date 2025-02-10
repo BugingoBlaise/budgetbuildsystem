@@ -15,4 +15,7 @@ public interface IMaterialService {
     List<Materials> getMaterialsBySupplierId(UUID supplierId);
 
     List<Materials>searchMaterialByName(String materialName);
+
+
+    long getTotalMaterials();
 }
