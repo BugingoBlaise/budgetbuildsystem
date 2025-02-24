@@ -1,8 +1,10 @@
 package com.budgetbuildsystem.service.materials;
 
 import com.budgetbuildsystem.model.Materials;
+import com.budgetbuildsystem.model.Supplier;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,4 +20,8 @@ public interface IMaterialService {
 
 
     long getTotalMaterials();
+
+    // New methods for Material Procurement Report
+    Map<String, Long> getMostFrequentMaterials();
+    Map.Entry<Supplier, Long> getSupplierWithMostMaterials();
 }

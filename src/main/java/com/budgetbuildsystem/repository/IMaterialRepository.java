@@ -16,5 +16,7 @@ public interface IMaterialRepository extends JpaRepository<Materials, UUID> {
     @Query("SELECT m FROM Materials m WHERE LOWER(m.materialName) LIKE LOWER(CONCAT('%', :kw, '%'))")
     Optional<List<Materials>> findMaterialsByMaterialName(@Param("kw") String materialName);
 
-
+    // New query method to find materials by supplier
+    @Query("SELECT m.supplier, COUNT(m) FROM Materials m GROUP BY m.supplier ORDER BY COUNT(m) DESC")
+    List<Object[]> findSupplierWithMostMaterials();
 }
