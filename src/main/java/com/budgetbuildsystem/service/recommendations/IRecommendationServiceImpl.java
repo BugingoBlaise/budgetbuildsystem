@@ -104,4 +104,9 @@ public class IRecommendationServiceImpl implements IRecommendationService {
             return recommendationList;
         }
     }
+
+    @Override
+    public List<Recommendation> findAll() {
+        return recommendationRepository.findAll();
+    }
 }

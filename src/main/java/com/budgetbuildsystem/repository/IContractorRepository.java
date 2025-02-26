@@ -4,6 +4,7 @@ import com.budgetbuildsystem.model.Contractor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,10 +15,8 @@ public interface IContractorRepository extends JpaRepository<Contractor, UUID> {
 
     @Query("SELECT AVG(c.averageRating) FROM Contractor c")
     double calculateAverageRating();
+    @Query("SELECT c FROM Contractor c ORDER BY c.averageRating DESC")
+    List<Contractor> findTopContractors();
 
 
-
-/*
-     @Query("SELECT AVG(r.rating) FROM Recommendation r WHERE r.contractor.id = :contractorId")
-     Double findAverageRatingByContractorId(@Param("contractorId") UUID contractorId);*/
 }

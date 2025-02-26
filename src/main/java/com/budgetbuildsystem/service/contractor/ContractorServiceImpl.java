@@ -1,7 +1,9 @@
 package com.budgetbuildsystem.service.contractor;
 
 import com.budgetbuildsystem.model.Contractor;
+import com.budgetbuildsystem.model.Recommendation;
 import com.budgetbuildsystem.repository.IContractorRepository;
+import com.budgetbuildsystem.repository.IRecommendationsRepo;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class ContractorServiceImpl implements IContractorService {
 
     private final IContractorRepository repo;
+    private final IRecommendationsRepo recommendationRepository;
 
     @Override
     public void saveContractor(Contractor contractor) {
@@ -67,5 +70,34 @@ public class ContractorServiceImpl implements IContractorService {
     @Override
     public long countContractors() {
         return repo.count();
+    }
+
+    @Override
+    public List<Contractor> findTopContractor() {
+        return null;
+    }
+
+    @Override
+    public long getTotalContractors() {
+        return repo.count();
+    }
+
+    @Override
+    public double calculateAverageRating() {
+        return repo.calculateAverageRating();
+    }
+
+    @Override
+    public List<Contractor> findTopContractors() {
+        return repo.findTopContractors();
+    }
+
+    @Override
+    public List<Recommendation> findAllReviews() {
+        return recommendationRepository.findAll();
+    }
+    @Override
+    public long getTotalReviews() {
+        return recommendationRepository.count(); // New method
     }
 }

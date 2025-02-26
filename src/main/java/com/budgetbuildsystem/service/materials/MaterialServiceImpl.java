@@ -70,9 +70,7 @@ public class MaterialServiceImpl implements IMaterialService {
     public long getTotalMaterials() {
         return repository.count();
     }
-
-
-    // New method: Get most frequent materials
+//     New method: Get most frequent materials
     @Override
     public Map<String, Long> getMostFrequentMaterials() {
         List<Materials> allMaterials = repository.findAll();

@@ -14,4 +14,6 @@ public interface IRecommendationsRepo extends JpaRepository<Recommendation, UUID
     List<Recommendation> findRecommendationsByContractorId(@Param("id") UUID id);
     @Query("SELECT r FROM Recommendation r WHERE r.contractor = :contractor")
     List<Recommendation> findRecommendationsByContractor(@Param("contractor") Contractor contractor);
+//    List<Recommendation> findAll();
+
 }

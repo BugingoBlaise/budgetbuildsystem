@@ -1,6 +1,7 @@
 package com.budgetbuildsystem.service.contractor;
 
 import com.budgetbuildsystem.model.Contractor;
+import com.budgetbuildsystem.model.Recommendation;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,16 @@ public interface IContractorService {
     double getAverageContractorRating();
     long countContractors();
 
+
+    List<Contractor>findTopContractor();
+
+
+
+    long getTotalContractors();
+    double calculateAverageRating();
+    List<Contractor> findTopContractors();
+    List<Recommendation> findAllReviews();
+    long getTotalReviews(); // New method
 
 }
 

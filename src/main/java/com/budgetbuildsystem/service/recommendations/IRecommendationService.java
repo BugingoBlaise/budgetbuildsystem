@@ -20,4 +20,5 @@ public interface IRecommendationService {
 
     List<Recommendation>findRecommendationsByContractor(Contractor contractor);
     List<Recommendation>findRecommendationByContractorId(UUID contractorId);
+    List<Recommendation> findAll();;
 }
