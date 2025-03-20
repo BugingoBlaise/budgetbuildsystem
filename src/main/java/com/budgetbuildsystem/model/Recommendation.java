@@ -26,7 +26,6 @@ public class Recommendation {
     @CollectionTable(name = "review_tags", joinColumns = @JoinColumn(name = "post_id"))
     private List<String> reviews = new ArrayList<>();
     private Date date;
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "citizen_id")
     private Citizen citizen;

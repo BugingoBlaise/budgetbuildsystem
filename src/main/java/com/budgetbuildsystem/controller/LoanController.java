@@ -52,12 +52,12 @@ public class LoanController {
     }
 
     @PutMapping("/updateLoan/{id}")
-    public ResponseEntity<?> updateLoan(@PathVariable UUID id, @RequestParam("LoanName") String LoanName, @RequestParam("description") String description, @RequestParam("interestRate") double interestRate, @RequestParam("link") String link, @RequestParam(value = "imagePath", required = false) MultipartFile imagePath) {
+    public ResponseEntity<?> updateLoan(@PathVariable UUID id, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("interestRate") double interestRate, @RequestParam("link") String link, @RequestParam(value = "imagePath", required = false) MultipartFile imagePath) {
         try {
             Optional<Loan> existingLoan = loanService.getLoanById(id);
             if (existingLoan.isPresent()) {
                 Loan loanToUpdate = existingLoan.get();
-                loanToUpdate.setName(LoanName);
+                loanToUpdate.setName(name);
                 loanToUpdate.setDescription(description);
                 loanToUpdate.setInterestRate(interestRate);
                 loanToUpdate.setLink(link);
