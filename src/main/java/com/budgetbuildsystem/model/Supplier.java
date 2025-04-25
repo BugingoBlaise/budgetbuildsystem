@@ -26,7 +26,7 @@ public class Supplier {
     @JsonIgnore
     private String password;
     private int tinNumber;
-    @OneToMany(mappedBy = "supplier",cascade = CascadeType.ALL, orphanRemoval = true )
+    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Materials> materials;
     @OneToOne(cascade = CascadeType.ALL)

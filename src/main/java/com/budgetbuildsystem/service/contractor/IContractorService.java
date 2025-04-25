@@ -3,6 +3,7 @@ package com.budgetbuildsystem.service.contractor;
 import com.budgetbuildsystem.model.Contractor;
 import com.budgetbuildsystem.model.Recommendation;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,11 +26,11 @@ public interface IContractorService {
 
 
 
-    long getTotalContractors();
-    double calculateAverageRating();
-    List<Contractor> findTopContractors();
+    long getTotalContractors(Date startDate, Date endDate);
+    double  calculateAverageRating(Date startDate, Date endDate);
+    List<Contractor> findTopContractors(Date startDate, Date endDate);
     List<Recommendation> findAllReviews();
-    long getTotalReviews(); // New method
+    long  getTotalReviews(Date startDate, Date endDate); // New method
 
 }
 

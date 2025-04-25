@@ -9,9 +9,13 @@ import com.budgetbuildsystem.service.regulations.IRegulationsService;
 import com.budgetbuildsystem.service.supplier.ISupplierService;
 import com.budgetbuildsystem.service.user.IUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,12 +30,13 @@ public class DashboardController {
     private final IRegulationsService regulationService;
 
     @GetMapping
-    public AdminDashData getDashboardData() {
+    public AdminDashData getDashboardData( @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+                                           @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
         long totalUsers = userService.getTotalUsers();
         long totalCitizens = citizenService.getTotalCitizens();
         long totalContractors = contractorService.countContractors();
         long totalSuppliers = supplierService.getTotalSuppliers();
-        long totalMaterials = materialService.getTotalMaterials();
+        long totalMaterials = materialService.getTotalMaterials(  startDate,   endDate);
         long totalLoans = loanService.getTotalLoans();
         long totalRegulations = regulationService.getTotalRegulations();
         double averageContractorRating = contractorService.getAverageContractorRating();

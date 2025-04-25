@@ -3,10 +3,7 @@ package com.budgetbuildsystem.service.materials;
 import com.budgetbuildsystem.model.Materials;
 import com.budgetbuildsystem.model.Supplier;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public interface IMaterialService {
     void deleteMaterial(UUID materialId);
@@ -16,12 +13,14 @@ public interface IMaterialService {
      Materials addMaterial(Materials materials);
     List<Materials> getMaterialsBySupplierId(UUID supplierId);
 
-    List<Materials>searchMaterialByName(String materialName);
+    List<Materials> searchMaterialByName(String materialName);
 
 
-    long getTotalMaterials();
+    long getTotalMaterials(Date startDate, Date endDate);
 
     // New methods for Material Procurement Report
-    Map<String, Long> getMostFrequentMaterials();
-    Map.Entry<Supplier, Long> getSupplierWithMostMaterials();
+    Map<String, Long> getMostFrequentMaterials(Date startDate, Date endDate);
+    Map.Entry<Supplier, Long> getSupplierWithMostMaterials(Date startDate, Date endDate);
+
+    List<Materials> getMaterialsInDateRange(Date startDate, Date endDate);
 }

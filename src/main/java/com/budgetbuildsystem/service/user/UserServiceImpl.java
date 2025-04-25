@@ -4,28 +4,28 @@ import com.budgetbuildsystem.dto.SignDto;
 import com.budgetbuildsystem.model.*;
 import com.budgetbuildsystem.repository.*;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-
+@RequiredArgsConstructor
 @Service@Slf4j
 public class UserServiceImpl implements IUserService {
 
-    @Autowired
-    ICitizenRepository citizenRepository;
-    @Autowired
+//    @Autowired
+   private final  ICitizenRepository citizenRepository;
+//    @Autowired
     ISupplierRepository supplierRepository;
-    @Autowired
-    IContractorRepository contractorRepository;
-    @Autowired
-    IUserRepository userRepository;
-    @Autowired
-    IAdminRepository iAdminRepository;
+//    @Autowired
+    private final  IContractorRepository contractorRepository;
+//    @Autowired
+    private final  IUserRepository userRepository;
+//    @Autowired
+    private final  IAdminRepository iAdminRepository;
 
     @Override
     public User signUpUser(SignDto signDto) {

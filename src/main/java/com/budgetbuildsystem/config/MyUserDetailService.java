@@ -18,6 +18,5 @@ public class MyUserDetailService implements UserDetailsService {
                 .orElseThrow(() -> new
                         UsernameNotFoundException("This username is not found: " + username)
                 );
-
     }
 }

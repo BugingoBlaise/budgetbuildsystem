@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -78,18 +79,27 @@ public class ContractorServiceImpl implements IContractorService {
     }
 
     @Override
-    public long getTotalContractors() {
-        return repo.count();
+    public long getTotalContractors(Date startDate, Date endDate) {
+        if (startDate == null && endDate == null) {
+            return repo.count();
+        }
+        return repo.countByReviewDateBetween(startDate, endDate);
     }
 
     @Override
-    public double calculateAverageRating() {
-        return repo.calculateAverageRating();
+    public double calculateAverageRating(Date startDate, Date endDate) {
+        if (startDate == null && endDate == null) {
+            return repo.calculateAverageRating();
+        }
+        return repo.calculateAverageRatingBetweenDates(startDate, endDate);
     }
 
     @Override
-    public List<Contractor> findTopContractors() {
-        return repo.findTopContractors();
+    public List<Contractor> findTopContractors(Date startDate, Date endDate) {
+        if (startDate == null && endDate == null) {
+            return repo.findTopContractors();
+        }
+        return repo.findTopContractorsBetweenDates(startDate, endDate);
     }
 
     @Override
@@ -97,7 +107,10 @@ public class ContractorServiceImpl implements IContractorService {
         return recommendationRepository.findAll();
     }
     @Override
-    public long getTotalReviews() {
-        return recommendationRepository.count(); // New method
+    public long getTotalReviews(Date startDate, Date endDate) {
+        if (startDate == null && endDate == null) {
+            return recommendationRepository.count();
+        }
+        return recommendationRepository.countByDateBetween(startDate, endDate);
     }
 }

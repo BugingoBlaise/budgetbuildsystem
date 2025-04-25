@@ -45,72 +45,12 @@ public class MaterialController {
         List<Materials> allMaterials = materialService.findAllMaterials();
         return ResponseEntity.ok(allMaterials);
     }
-   /* @PostMapping("/saveMaterial")
-    public ResponseEntity<?> addMaterial(
-            @RequestParam("materialName") String materialName,
-            @RequestParam("materialDetails") String materialDetails,
-            @RequestParam("price") float price,
-            @RequestParam(value = "imagePath", required = true) MultipartFile imagePath
-             ) {
-        try {
-
-            Materials newMaterial = new Materials();
-            newMaterial.setMaterialName(materialName);
-            newMaterial.setMaterialDetails(materialDetails);
-            newMaterial.setPrice(price);
-            newMaterial.setPostedDate(new Date());
-
-
-
-            // Handle image upload
-            if (imagePath != null && !imagePath.isEmpty()) {
-                String fileName = fileService.storeFile(imagePath);
-                newMaterial.setImagePath(fileName);
-            }
-
-
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (!(authentication instanceof AnonymousAuthenticationToken)) {
-                String currentUserName = authentication.getName();
-
-
-                // Get current user from JWT authentication
-                User user = userRepository.findByUsername(currentUserName)
-                        .orElseThrow(() -> new IllegalStateException("User not found"));
-
-                // Check if user is a supplier
-                if (!user.getRoles().contains("SUPPLIER")) {
-                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                            .body("Only suppliers can add materials");
-                }
-                // Get supplier profile
-                Supplier currentSupplier = supplierRepository.findByUser(user)
-                        .orElseThrow(() -> new IllegalStateException("Supplier profile not found"));
-                newMaterial.setSupplier(currentSupplier);
-            }
-
-
-
-
-            Materials savedMaterial = materialService.addMaterial(newMaterial);
-            return ResponseEntity.ok(savedMaterial);
-
-        } catch (IOException e) {
-            log.error("Failed to upload file", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Could not upload file: " + e.getMessage());
-        } catch (Exception e) {
-            log.error("Failed to save material", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error saving material: " + e.getMessage());
-        }
-    }*/
-
     @PostMapping("/saveMaterial")
     public ResponseEntity<?> addMaterial(
             @RequestParam("materialName") String materialName,
             @RequestParam("materialDetails") String materialDetails,
             @RequestParam("price") float price,
+            @RequestParam ("quantity") int quantity,
             @RequestParam(value = "imagePath", required = true) MultipartFile imagePath
     ) {
         try {
@@ -139,6 +79,7 @@ public class MaterialController {
             newMaterial.setMaterialName(materialName);
             newMaterial.setMaterialDetails(materialDetails);
             newMaterial.setPrice(price);
+            newMaterial.setQuantity(quantity);
             newMaterial.setPostedDate(new Date());
 
             // Crucially, set the supplier
@@ -198,6 +139,7 @@ public class MaterialController {
             @RequestParam("materialName") String materialName,
             @RequestParam("materialDetails") String materialDetails,
             @RequestParam("price") float price,
+            @RequestParam("quantity") int quantity,
             @RequestParam(value = "imagePath", required = false) MultipartFile imagePath
     ) {
         try {
@@ -209,6 +151,7 @@ public class MaterialController {
                 materialToUpdate.setMaterialDetails(materialDetails);
 
                 materialToUpdate.setPrice(price);
+                materialToUpdate.setQuantity(quantity);
 //                Supplier supplier = (Supplier) session.getAttribute("currentUser");
 
 //                if (supplier != null) materialToUpdate.setSupplier(supplier);

@@ -52,8 +52,8 @@ public class MaterialServiceImpl implements IMaterialService {
 
     @Override
     public List<Materials> getMaterialsBySupplierId(UUID supplierId) {
-        Optional<List<Materials>> materials = repository.findMaterialsBySupplierId(supplierId);
-        return materials.orElseThrow(() -> new EntityNotFoundException("No materials found for supplier ID: " + supplierId));
+        return repository.findMaterialsBySupplierId(supplierId);
+
     }
 
     @Override
@@ -61,36 +61,60 @@ public class MaterialServiceImpl implements IMaterialService {
         if (materialName == null || materialName.trim().isEmpty()) {
             throw new IllegalArgumentException("Material name cannot be empty");
         }
-        Optional<List<Materials>> materials = repository.findMaterialsByMaterialName(materialName.trim());
-        return materials.orElseThrow(() -> new EntityNotFoundException("Material not found"));
+        return repository.findMaterialsByMaterialName(materialName.trim());
     }
 
 
     @Override
-    public long getTotalMaterials() {
-        return repository.count();
+    public long getTotalMaterials(Date startDate, Date endDate) {
+        if (startDate == null && endDate == null) {
+            return repository.count();
+        }
+        return repository.countByPostedDateBetween(startDate, endDate);
     }
-//     New method: Get most frequent materials
+
     @Override
-    public Map<String, Long> getMostFrequentMaterials() {
-        List<Materials> allMaterials = repository.findAll();
+    public Map<String, Long> getMostFrequentMaterials(Date startDate, Date endDate) {
+        List<Materials> materials;
+        if (startDate == null && endDate == null) {
+            materials = repository.findAll();
+        } else {
+            materials = repository.findByPostedDateBetween(startDate, endDate);
+        }
 
         // Group materials by name and count occurrences
-        Map<String, Long> materialFrequency = allMaterials.stream().collect(Collectors.groupingBy(Materials::getMaterialName, Collectors.counting()));
+        Map<String, Long> materialFrequency = materials.stream()
+                .collect(Collectors.groupingBy(Materials::getMaterialName, Collectors.counting()));
 
-        return materialFrequency.entrySet().stream().sorted(Map.Entry.<String, Long>comparingByValue().reversed()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        return materialFrequency.entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
     @Override
-    public Map.Entry<Supplier, Long> getSupplierWithMostMaterials() {
-        List<Materials> allMaterials = repository.findAll();
+    public Map.Entry<Supplier, Long> getSupplierWithMostMaterials(Date startDate, Date endDate) {
+        List<Materials> materials;
+        if (startDate == null && endDate == null) {
+            materials = repository.findAll();
+        } else {
+            materials = repository.findByPostedDateBetween(startDate, endDate);
+        }
+
         // Group materials by supplier and count occurrences
-        Map<Supplier, Long> supplierMaterialCount = allMaterials.stream()
+        Map<Supplier, Long> supplierMaterialCount = materials.stream()
                 .collect(Collectors.groupingBy(Materials::getSupplier, Collectors.counting()));
 
         // Find the supplier with the maximum materials
         return supplierMaterialCount.entrySet().stream()
                 .max(Map.Entry.comparingByValue())
-                .orElseThrow(() -> new EntityNotFoundException("No suppliers found"));
+                .orElseThrow(() -> new EntityNotFoundException("No suppliers found in this date range"));
+    }
+
+    @Override
+    public List<Materials> getMaterialsInDateRange(Date startDate, Date endDate) {
+        if (startDate == null && endDate == null) {
+            return repository.findAll();
+        }
+        return repository.findByPostedDateBetween(startDate, endDate);
     }
 }

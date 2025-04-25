@@ -20,6 +20,7 @@ public class Materials {
     private String materialName;
     private String materialDetails;
     private float price;
+    private int quantity;
     private String imagePath;
     private Date postedDate;
     @ManyToOne
