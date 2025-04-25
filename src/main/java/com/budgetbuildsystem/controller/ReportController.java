@@ -28,21 +28,7 @@ public class ReportController {
     private final IContractorService contractorService;
     private final IRecommendationService recommendationService;
 
-  /*  @GetMapping("/material-procurement")
-    public ResponseEntity<MaterialProcurementReport> getMaterialProcurementReport() {
-        long totalMaterials = materialService.getTotalMaterials();
-        Map<String, Long> mostFrequentMaterials = materialService.getMostFrequentMaterials();
-        Map.Entry<Supplier, Long> topSupplierEntry = materialService.getSupplierWithMostMaterials();
-        Supplier topSupplier = topSupplierEntry.getKey();
-        long numberOfMaterials = topSupplierEntry.getValue();
-        MaterialProcurementReport report = new MaterialProcurementReport(
-                totalMaterials,
-                mostFrequentMaterials,
-                topSupplier,
-                numberOfMaterials
-        );
-        return ResponseEntity.ok(report);
-    }*/
+
   @GetMapping("/material-procurement")
   public ResponseEntity<MaterialProcurementReport> getMaterialProcurementReport(
           @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
@@ -94,19 +80,5 @@ public class ReportController {
         return ResponseEntity.ok(report);
     }
 
-    /*@GetMapping("/contractor-performance")
-    public ResponseEntity<ContractorPerformanceReport> getContractorPerformanceReport() {
-        long totalContractors = contractorService.getTotalContractors();
-        double averageRating = contractorService.calculateAverageRating();
-        List<Contractor> topContractors = contractorService.findTopContractors();
-        List<Recommendation> reviews = contractorService.findAllReviews();
-        long totalReviews = contractorService.getTotalReviews();
-        ContractorPerformanceReport report = new ContractorPerformanceReport(
-                totalContractors,
-                averageRating,
-                topContractors,
-                totalReviews
-        );
-        return ResponseEntity.ok(report);
-    }*/
+
 }
