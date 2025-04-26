@@ -91,23 +91,27 @@ public class MaterialServiceImpl implements IMaterialService {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
+
+
+
     @Override
     public Map.Entry<Supplier, Long> getSupplierWithMostMaterials(Date startDate, Date endDate) {
-        List<Materials> materials;
-        if (startDate == null && endDate == null) {
-            materials = repository.findAll();
-        } else {
-            materials = repository.findByPostedDateBetween(startDate, endDate);
-        }
+        List<Materials> materials = (startDate == null && endDate == null)
+                ? repository.findAll()
+                : repository.findByPostedDateBetween(startDate, endDate);
 
-        // Group materials by supplier and count occurrences
-        Map<Supplier, Long> supplierMaterialCount = materials.stream()
-                .collect(Collectors.groupingBy(Materials::getSupplier, Collectors.counting()));
+        // Create a default empty supplier if needed
+        Supplier emptySupplier = new Supplier();
+        emptySupplier.setCompanyName("No supplier found");
 
-        // Find the supplier with the maximum materials
-        return supplierMaterialCount.entrySet().stream()
+        return materials.stream()
+                .collect(Collectors.groupingBy(
+                        Materials::getSupplier,
+                        Collectors.counting()
+                ))
+                .entrySet().stream()
                 .max(Map.Entry.comparingByValue())
-                .orElseThrow(() -> new EntityNotFoundException("No suppliers found in this date range"));
+                .orElse(new AbstractMap.SimpleEntry<>(emptySupplier, 0L));
     }
 
     @Override
@@ -117,4 +121,10 @@ public class MaterialServiceImpl implements IMaterialService {
         }
         return repository.findByPostedDateBetween(startDate, endDate);
     }
+
+
+
+
+
+
 }

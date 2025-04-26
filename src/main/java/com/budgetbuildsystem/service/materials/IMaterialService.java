@@ -23,4 +23,7 @@ public interface IMaterialService {
     Map.Entry<Supplier, Long> getSupplierWithMostMaterials(Date startDate, Date endDate);
 
     List<Materials> getMaterialsInDateRange(Date startDate, Date endDate);
+
+
+//    MaterialServiceImpl.SupplierMaterialResult getSupplierWithMostMaterials(Date startDate, Date endDate);
 }

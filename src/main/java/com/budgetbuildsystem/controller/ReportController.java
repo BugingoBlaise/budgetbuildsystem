@@ -28,36 +28,36 @@ public class ReportController {
     private final IContractorService contractorService;
     private final IRecommendationService recommendationService;
 
+    @GetMapping("/material-procurement")
+    public ResponseEntity<MaterialProcurementReport> getMaterialProcurementReport(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
 
-  @GetMapping("/material-procurement")
-  public ResponseEntity<MaterialProcurementReport> getMaterialProcurementReport(
-          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+        long totalMaterials = materialService.getTotalMaterials(startDate, endDate);
+        Map<String, Long> mostFrequentMaterials = materialService.getMostFrequentMaterials(startDate, endDate);
+        Map.Entry<Supplier, Long> topSupplierEntry = materialService.getSupplierWithMostMaterials(startDate, endDate);
+        List<Materials> materialsInRange = materialService.getMaterialsInDateRange(startDate, endDate);
 
+        MaterialProcurementReport report;
 
-      System.out.println("Start date: "+startDate);
-      System.out.println("End date: " +endDate);
+        if (topSupplierEntry.getKey() != null && !topSupplierEntry.getKey().getCompanyName().equals("No supplier found")) {
+            report = new MaterialProcurementReport(
+                    totalMaterials,
+                    mostFrequentMaterials,
+                    topSupplierEntry.getKey(),
+                    topSupplierEntry.getValue(),
+                    materialsInRange
+            );
+        } else {
+            report = MaterialProcurementReport.withNoSupplier(
+                    totalMaterials,
+                    mostFrequentMaterials,
+                    materialsInRange
+            );
+        }
 
-      long totalMaterials = materialService.getTotalMaterials(startDate, endDate);
-      Map<String, Long> mostFrequentMaterials = materialService.getMostFrequentMaterials(startDate, endDate);
-      Map.Entry<Supplier, Long> topSupplierEntry = materialService.getSupplierWithMostMaterials(startDate, endDate);
-
-      // Get the actual materials in the date range for the table
-      List<Materials> materialsInRange = materialService.getMaterialsInDateRange(startDate, endDate);
-
-      Supplier topSupplier = topSupplierEntry.getKey();
-      long numberOfMaterials = topSupplierEntry.getValue();
-
-      MaterialProcurementReport report = new MaterialProcurementReport(
-              totalMaterials,
-              mostFrequentMaterials,
-              topSupplier,
-              numberOfMaterials,
-              materialsInRange // New field
-      );
-      return ResponseEntity.ok(report);
-  }
-
+        return ResponseEntity.ok(report);
+    }
     @GetMapping("/contractor-performance")
     public ResponseEntity<ContractorPerformanceReport> getContractorPerformanceReport(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
@@ -66,6 +66,7 @@ public class ReportController {
 
         System.out.println("Start date: "+startDate);
         System.out.println("End date: "+endDate);
+
         long totalContractors = contractorService.getTotalContractors(startDate, endDate);
         double averageRating = contractorService.calculateAverageRating(startDate, endDate);
         List<Contractor> topContractors = contractorService.findTopContractors(startDate, endDate);
@@ -79,6 +80,4 @@ public class ReportController {
         );
         return ResponseEntity.ok(report);
     }
-
-
 }

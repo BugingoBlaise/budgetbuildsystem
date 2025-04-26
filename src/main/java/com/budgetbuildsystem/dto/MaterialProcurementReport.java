@@ -18,4 +18,19 @@ public class MaterialProcurementReport {
     private Supplier topSupplier;
     private long numberOfMaterials;
     private List<Materials> materialsInRange;
+
+
+    // Add a static method for empty supplier case
+    public static MaterialProcurementReport withNoSupplier(
+            long totalMaterials,
+            Map<String, Long> mostFrequentMaterials,
+            List<Materials> materialsInRange) {
+        return new MaterialProcurementReport(
+                totalMaterials,
+                mostFrequentMaterials,
+                null, // null supplier
+                0,    // 0 materials
+                materialsInRange
+        );
+    }
 }
