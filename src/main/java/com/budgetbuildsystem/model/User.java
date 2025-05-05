@@ -59,6 +59,7 @@ public  class User implements UserDetails {
         if (contractor != null) return contractor;
         return null;
     }
+
      @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());

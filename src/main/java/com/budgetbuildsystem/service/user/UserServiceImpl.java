@@ -163,5 +163,17 @@ public class UserServiceImpl implements IUserService {
         return userRepository.count();
     }
 
+    @Override
+    public Contractor findContractorById(UUID id) {
+
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("USER OF ID {} NOT FOUND" + id));
+        if (!user.getRoles().iterator().next().equals("CONTRACTOR")) {
+            throw new EntityNotFoundException("USER OF ID {} IS NOT A CONTRACTOR" + id);
+        }
+        return contractorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("CONTRACTOR OF ID {} NOT FOUND" + id));
+
+//        return null;
+    }
+
 
 }

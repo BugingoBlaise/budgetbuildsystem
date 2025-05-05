@@ -28,15 +28,6 @@ public class AuthController {
     @Autowired
     private IUserRepository userRepository;
 
-    /*@PostMapping("/signup")
-    public ResponseEntity<AuthResponse> signUp(@RequestBody SignDto signDto) {
-        try {
-            return ResponseEntity.ok(authService.register(signDto));
-        } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }*/
-
 
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody SignDto signDto) {

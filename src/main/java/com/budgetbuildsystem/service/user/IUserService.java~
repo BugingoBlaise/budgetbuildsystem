@@ -29,5 +29,4 @@ public interface IUserService {
 
     long getTotalUsers();
 
-    Contractor findContractorById(UUID id);
 }
